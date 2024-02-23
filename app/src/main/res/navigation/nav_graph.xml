@@ -6,12 +6,12 @@
 
     <fragment
         android:id="@+id/nav_main"
-        android:name="com.motivation.affirmations.ui.main.MainFragment"
+        android:name="com.motivation.affirmations.ui.fragments.main.HomeFragment"
         tools:layout="@layout/fragment_main" />
 
     <fragment
         android:id="@+id/nav_music"
-        android:name="com.motivation.affirmations.ui.music.BackgroundMusicFragment"
+        android:name="com.motivation.affirmations.ui.fragments.background_music.BackgroundMusicFragment"
         android:label="@string/background_music"
         tools:layout="@layout/fragment_background_music" />
 </navigation>

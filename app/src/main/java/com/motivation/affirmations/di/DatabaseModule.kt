@@ -1,4 +1,4 @@
-package com.motivation.affirmations.data.di
+package com.motivation.affirmations.di
 
 import dagger.Module
 import dagger.hilt.InstallIn

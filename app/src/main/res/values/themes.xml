@@ -3,8 +3,8 @@
 
     <style name="Base.V21.Theme.Motivation" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Color palettes -->
-        <item name="colorPrimary">@color/pickled_bluewood</item>
-        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/pickled_bluewood</item>
 
         <item name="colorSecondary">@color/royal_blue</item>
         <item name="colorOnSecondary">@color/white</item>
@@ -57,7 +57,6 @@
 
         <!-- Widget styles -->
         <item name="android:progressBarStyle">@style/Widget.Motivation.ProgressBar</item>
-        <item name="materialButtonStyle">@style/Widget.Motivation.Button</item>
         <item name="bottomNavigationStyle">@style/Widget.Motivation.BottomNavigationView</item>
         <item name="materialCardViewStyle">@style/Widget.Motivation.CardView</item>
         <item name="checkboxStyle">@style/Widget.Motivation.CheckBox</item>
