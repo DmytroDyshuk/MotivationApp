@@ -37,9 +37,8 @@
 
     <!-- region Button -->
     <dimen name="button_corner_radius">12dp</dimen>
-    <dimen name="default_main_button_width">50dp</dimen>
-    <dimen name="default_main_button_height">50dp</dimen>
-    <dimen name="padding_button">16dp</dimen>
+    <dimen name="default_home_button_width">58dp</dimen>
+    <dimen name="default_home_button_height">64dp</dimen>
     <!-- endregion -->
 
     <!-- region BottomNavigationView -->
@@ -59,6 +58,9 @@
 
     <!-- region CardView -->
     <dimen name="card_view_corner_radius">16dp</dimen>
+    <dimen name="circle_card_view_corner_radius">28dp</dimen>
+    <dimen name="circle_card_view_width">55dp</dimen>
+    <dimen name="circle_card_view_height">55dp</dimen>
 
     <!-- endregion -->
 
