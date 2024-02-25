@@ -1,5 +1,6 @@
 package com.motivation.affirmations.data.source.remote.models
 
+import com.motivation.affirmations.data.source.local.entities.SoundCategoryEntity
 import com.motivation.affirmations.domain.model.SoundCategory
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -20,12 +21,22 @@ data class SoundCategoryRemote(
 
 fun SoundCategoryRemote.asDomainModel(): SoundCategory {
     return SoundCategory(
-        created = created,
-        classType = classType,
-        titleEn = titleEn,
-        id = id,
-        objectId = objectId,
-        ownerId = ownerId,
-        updated = updated
+        created = this@asDomainModel.created,
+        classType = this@asDomainModel.classType,
+        titleEn = this@asDomainModel.titleEn,
+        id = this@asDomainModel.id,
+        objectId = this@asDomainModel.objectId,
+        ownerId = this@asDomainModel.ownerId
+    )
+}
+
+fun SoundCategoryRemote.asEntity(): SoundCategoryEntity {
+    return SoundCategoryEntity(
+        created = this@asEntity.created,
+        classType = this@asEntity.classType,
+        titleEn = this@asEntity.titleEn,
+        id = this@asEntity.id,
+        objectId = this@asEntity.objectId,
+        ownerId = this@asEntity.ownerId
     )
 }

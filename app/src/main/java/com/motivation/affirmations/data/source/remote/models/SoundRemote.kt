@@ -1,5 +1,6 @@
 package com.motivation.affirmations.data.source.remote.models
 
+import com.motivation.affirmations.data.source.local.entities.SoundEntity
 import com.motivation.affirmations.domain.model.Sound
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -29,16 +30,31 @@ data class SoundRemote(
 
 fun SoundRemote.asDomainModel(): Sound {
     return Sound(
-        created = created,
-        previewName = previewName,
-        soundName = soundName,
-        ownerId = ownerId,
-        categoryId = categoryId,
-        thumbnailName = thumbnailName,
-        titleEn = titleEn,
-        id = id,
-        locked = locked,
-        updated = updated,
-        objectId = objectId
+        created = this@asDomainModel.created,
+        previewName = this@asDomainModel.previewName,
+        soundName = this@asDomainModel.soundName,
+        ownerId = this@asDomainModel.ownerId,
+        categoryId = this@asDomainModel.categoryId,
+        thumbnailName = this@asDomainModel.thumbnailName,
+        titleEn = this@asDomainModel.titleEn,
+        id = this@asDomainModel.id,
+        locked = this@asDomainModel.locked,
+        updated = this@asDomainModel.updated,
+        objectId = this@asDomainModel.objectId
+    )
+}
+
+fun SoundRemote.asEntity(): SoundEntity {
+    return SoundEntity(
+        created = this@asEntity.created,
+        previewName = this@asEntity.previewName,
+        soundName = this@asEntity.soundName,
+        ownerId = this@asEntity.ownerId,
+        categoryId = this@asEntity.categoryId,
+        thumbnailName = this@asEntity.thumbnailName,
+        titleEn = this@asEntity.titleEn,
+        id = this@asEntity.id,
+        locked = this@asEntity.locked,
+        objectId = this@asEntity.objectId
     )
 }
