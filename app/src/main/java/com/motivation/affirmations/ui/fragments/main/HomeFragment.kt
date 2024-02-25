@@ -1,27 +1,30 @@
 package com.motivation.affirmations.ui.fragments.main
 
-import android.animation.ObjectAnimator
+import  android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
+import com.motivation.affirmations.util.Defaults
 import com.motivation.app.R
-import com.motivation.app.databinding.FragmentMainBinding
+import com.motivation.app.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Created by Andriy Deputat email(andriy.deputat@gmail.com) on 19.02.2024.
  */
 @AndroidEntryPoint
-class HomeFragment : ViewBindingFragment<FragmentMainBinding>() {
+class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
 
     private val viewModel by viewModels<HomeViewModel>()
 
@@ -30,11 +33,16 @@ class HomeFragment : ViewBindingFragment<FragmentMainBinding>() {
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ) = FragmentMainBinding.inflate(inflater, container, false)
+    ) = FragmentHomeBinding.inflate(inflater, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initSoundsListAdapter()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isTuneExpanded = !isTuneExpanded
     }
 
     override fun setListeners() {
@@ -52,7 +60,7 @@ class HomeFragment : ViewBindingFragment<FragmentMainBinding>() {
                 Toast.makeText(context, "onSoundClicked", Toast.LENGTH_SHORT).show()
             },
             onAddSoundClicked = {
-                Toast.makeText(context, "onAddSoundClicked", Toast.LENGTH_SHORT).show()
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBackgroundMusicFragment())
             }
         )
         binding.rvFavouriteSounds.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
