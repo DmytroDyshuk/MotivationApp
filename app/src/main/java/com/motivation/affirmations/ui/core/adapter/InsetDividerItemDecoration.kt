@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.core.adapters
+package com.motivation.affirmations.ui.core.adapter
 
 import android.content.Context
 import android.graphics.drawable.InsetDrawable

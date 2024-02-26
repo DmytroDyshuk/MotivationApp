@@ -67,7 +67,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    namespace = "com.motivation.app"
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions {
@@ -113,15 +112,8 @@ dependencies {
 
     implementation(libs.timber)
 
-    //Glide
-    implementation(libs.glide)
-
-    //Moshi
-    implementation(libs.moshi)
-
-    //Retrofit with Moshi Converter
-    implementation(libs.retrofit)
-    implementation(libs.okhttp3)
+    // Coil
+    implementation(libs.coil)
 
     // https://github.com/chrisbanes/insetter
     implementation(libs.insetter)
