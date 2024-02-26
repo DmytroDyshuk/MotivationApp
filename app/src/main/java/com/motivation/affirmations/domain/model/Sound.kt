@@ -1,6 +1,5 @@
 package com.motivation.affirmations.domain.model
 
-import java.util.Date
 
 data class Sound(
     val created: Long,
@@ -12,6 +11,5 @@ data class Sound(
     val titleEn: String,
     val id: Int,
     val locked: Boolean,
-    val updated: Date? = null,
     val objectId: String
 )

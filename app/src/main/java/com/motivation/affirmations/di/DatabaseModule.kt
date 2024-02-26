@@ -33,4 +33,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideSoundCategoryDao(appDatabase: AppDatabase) = appDatabase.soundCategoryDao
+
+    @Provides
+    @Singleton
+    fun provideSoundFileDao(appDatabase: AppDatabase) = appDatabase.soundFileDao
 }

@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface SoundCategoryApi {
     @GET("data/SoundCategory")
-    suspend fun getSoundCategory(): SoundCategoryRemote
+    suspend fun getAllSoundCategories(): List<SoundCategoryRemote>
 }

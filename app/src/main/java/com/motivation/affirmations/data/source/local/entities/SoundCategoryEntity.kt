@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.motivation.affirmations.domain.model.SoundCategory
 
-@Entity
+@Entity(tableName = "sound_categories")
 data class SoundCategoryEntity constructor(
     @PrimaryKey(autoGenerate = false)
     val created: Long,

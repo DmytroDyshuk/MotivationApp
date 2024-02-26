@@ -24,7 +24,6 @@ data class SoundRemote(
     val titleEn: String,
     val id: Int,
     val locked: Boolean,
-    val updated: Date?,
     val objectId: String
 )
 
@@ -39,7 +38,6 @@ fun SoundRemote.asDomainModel(): Sound {
         titleEn = this@asDomainModel.titleEn,
         id = this@asDomainModel.id,
         locked = this@asDomainModel.locked,
-        updated = this@asDomainModel.updated,
         objectId = this@asDomainModel.objectId
     )
 }

@@ -2,6 +2,7 @@ package com.motivation.affirmations.di
 
 import com.motivation.affirmations.data.source.remote.api.SoundApi
 import com.motivation.affirmations.data.source.remote.api.SoundCategoryApi
+import com.motivation.affirmations.data.source.remote.api.SoundFileApi
 import com.motivation.affirmations.util.Defaults
 import com.motivation.app.BuildConfig
 import com.squareup.moshi.Moshi
@@ -14,7 +15,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -55,5 +55,11 @@ object NetworkModule {
     @Singleton
     fun provideSoundCategoryApi(retrofit: Retrofit): SoundCategoryApi {
         return retrofit.create(SoundCategoryApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSoundFileApi(retrofit: Retrofit): SoundFileApi {
+        return retrofit.create(SoundFileApi::class.java)
     }
 }
