@@ -2,16 +2,5 @@
     <string name="app_name">Motivation</string>
     <string name="share_via">Share Via</string>
     <string name="oops_we_cannot_do_this">Oops, we cannot do this</string>
-    <string name="home">Home</string>
     <string name="background_music">Background music</string>
-
-    <!-- region ItemAddFavouriteSound -->
-    <string name="add">Add</string>
-    <!-- endregion -->
-
-    <!-- region ContentDescription -->
-    <string name="content_description_add_pause_icon">Add or pause icon</string>
-    <string name="content_description_background_image">Background image</string>
-    <!-- endregion -->
-    
 </resources>

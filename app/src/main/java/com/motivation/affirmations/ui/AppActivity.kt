@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.activity
+package com.motivation.affirmations.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

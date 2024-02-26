@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.fragments
+package com.motivation.affirmations.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater

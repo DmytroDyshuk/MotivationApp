@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.core.adapters
+package com.motivation.affirmations.ui.core.adapter
 
 import android.graphics.Rect
 import android.view.View
