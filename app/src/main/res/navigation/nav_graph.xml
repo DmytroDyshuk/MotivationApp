@@ -2,16 +2,22 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/nav_main">
+    app:startDestination="@id/nav_home">
 
     <fragment
-        android:id="@+id/nav_main"
-        android:name="com.motivation.affirmations.ui.main.MainFragment"
-        tools:layout="@layout/fragment_main" />
+        android:id="@+id/nav_home"
+        android:name="com.motivation.affirmations.ui.fragments.main.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_backgroundMusicFragment"
+            app:destination="@+id/nav_music" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_music"
-        android:name="com.motivation.affirmations.ui.music.BackgroundMusicFragment"
+        android:name="com.motivation.affirmations.ui.fragments.background_music.BackgroundMusicFragment"
         android:label="@string/background_music"
         tools:layout="@layout/fragment_background_music" />
+
 </navigation>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.motivation.app">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,7 +15,7 @@
         android:theme="@style/Theme.Motivation.Splash">
 
         <activity
-            android:name="com.motivation.affirmations.ui.AppActivity"
+            android:name="com.motivation.affirmations.ui.activity.AppActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"

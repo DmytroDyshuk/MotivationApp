@@ -1,9 +1,9 @@
-package com.motivation.affirmations.ui.music
+package com.motivation.affirmations.ui.fragments.background_music
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.motivation.affirmations.ui.ViewBindingFragment
+import com.motivation.affirmations.ui.fragments.ViewBindingFragment
 import com.motivation.app.databinding.FragmentBackgroundMusicBinding
 import dagger.hilt.android.AndroidEntryPoint
 

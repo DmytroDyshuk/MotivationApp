@@ -1,17 +1,17 @@
 #TODO update versions
 [versions]
 #versions updated 31.03.2023
-androidGradlePlugin = "7.4.2"
+androidGradlePlugin = "8.2.2"
 androidxAppCompat = "1.6.1"
-androidxCore = "1.9.0"
-androidxNavigation = "2.5.3"
-androidxLifecycle = "2.6.1"
+androidxCore = "1.12.0"
+androidxNavigation = "2.7.7"
+androidxLifecycle = "2.7.0"
 androidxCoreSplashscreen = "1.0.0"
 billing = "6.0.1"
 datastore = "1.0.0"
-hilt = "2.45"
-hilt-android-compliler = "1.0.0"
-hilt-work = "1.0.0"
+hilt = "2.50"
+hilt-android-compliler = "1.2.0"
+hilt-work = "1.2.0"
 kotlin = "1.8.20"
 kotlinxCoroutines = "1.6.4"
 leakcanary = "2.9.1"
@@ -30,6 +30,7 @@ play-core-ktx = "1.8.1"
 start-up = "1.1.1"
 fragment-ktx = "1.5.6"
 coil = "2.3.0"
+glide = "4.15.1"
 insetter = "0.6.1"
 mixpanel = "7.3.0"
 backendless = "6.3.6"
@@ -43,6 +44,9 @@ gradle-versions-plugin = "0.46.0"
 onesignal-gradle = "0.14.0"
 aat-kit = "3.3.9"
 anrwatchdog = "1.4.0"
+moshi = "1.14.0"
+retrofit = "2.9.0"
+okhttp3 = "4.12.0"
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
@@ -61,6 +65,7 @@ androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-p
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 billing = { module = "com.android.billingclient:billing", version.ref = "billing"}
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 insetter = { group = "dev.chrisbanes.insetter", name = "insetter", version.ref = "insetter" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
@@ -93,6 +98,9 @@ appsflyer = { module = "com.appsflyer:af-android-sdk", version.ref = "appsflyer"
 datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "date-time" }
 aat-kit = { module = "com.intentsoftware.addapptr:AATKit", version.ref = "aat-kit" }
 anrwatchdog = { group = "com.github.anrwatchdog", name = "anrwatchdog", version.ref = "anrwatchdog" }
+moshi = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
+retrofit = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+okhttp3 = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

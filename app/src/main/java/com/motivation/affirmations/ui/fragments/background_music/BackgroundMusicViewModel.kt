@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.music
+package com.motivation.affirmations.ui.fragments.background_music
 
 import com.motivation.affirmations.ui.core.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
