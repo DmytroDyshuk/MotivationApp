@@ -2,6 +2,7 @@ package com.motivation.affirmations.ui.core.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,22 +14,34 @@ class SoundCategoryListAdapter(
     private val onSoundCategoryClicked: (soundCategory: SoundCategory) -> Unit
 ) : ListAdapter<SoundCategory, SoundCategoryListAdapter.SoundCategoryViewHolder>(DiffCallback()) {
 
+    private var selectedPosition: Int = RecyclerView.NO_POSITION
+
+    init {
+        selectItem(0)
+    }
+
     inner class SoundCategoryViewHolder(
         private val binding: ListItemSoundCategoryBinding,
         private val onSoundCategoryClicked: (soundCategory: SoundCategory) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(soundCategory: SoundCategory) {
+        fun bind(soundCategory: SoundCategory, position: Int) {
             binding.apply {
                 tvSoundCategory.text = soundCategory.titleEn
 
-                tvSoundCategory.setOnClickListener {
+                if (position == selectedPosition) {
+                    tvSoundCategory.setTextColor(ContextCompat.getColor(binding.root.context, R.color.white))
                     tvSoundCategory.setBackgroundResource(R.drawable.shape_rounded_blue_background)
+                } else {
+                    tvSoundCategory.setTextColor(ContextCompat.getColor(binding.root.context, R.color.pickled_bluewood))
+                    tvSoundCategory.setBackgroundResource(R.drawable.shape_rounded_light_blue_background)
+                }
+
+                tvSoundCategory.setOnClickListener {
+                    selectItem(position)
                     onSoundCategoryClicked.invoke(soundCategory)
                 }
             }
         }
-
-
     }
 
     override fun onCreateViewHolder(
@@ -42,7 +55,16 @@ class SoundCategoryListAdapter(
 
     override fun onBindViewHolder(holder: SoundCategoryListAdapter.SoundCategoryViewHolder, position: Int) {
         val currentCategory = getItem(position)
-        holder.bind(currentCategory)
+        holder.bind(currentCategory, position)
+    }
+
+    private fun selectItem(position: Int) {
+        val previousSelectedPosition = selectedPosition
+        selectedPosition = position
+        if (previousSelectedPosition != RecyclerView.NO_POSITION) {
+            notifyItemChanged(previousSelectedPosition)
+        }
+        notifyItemChanged(selectedPosition)
     }
 
 

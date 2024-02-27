@@ -1,6 +1,5 @@
 package com.motivation.affirmations.data.repository
 
-import android.util.Log
 import com.motivation.affirmations.data.source.local.dao.SoundCategoryDao
 import com.motivation.affirmations.data.source.local.entities.asListDomainModel
 import com.motivation.affirmations.data.source.remote.api.SoundCategoryApi

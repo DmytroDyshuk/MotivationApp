@@ -26,6 +26,8 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
 
     private val viewModel by viewModels<BackgroundMusicViewModel>()
 
+    private lateinit var categoryListAdapter: SoundCategoryListAdapter
+
     override fun inflateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,16 +35,36 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.refreshSoundCategories()
+        initCategoriesListAdapter(view)
+    }
 
-        val adapter = SoundCategoryListAdapter(onSoundCategoryClicked = {
+    override fun addObservers() {
+        super.addObservers()
+        viewModel.viewModelScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    categoryListAdapter.submitList(it.soundCategoriesList)
+                }
+            }
+        }
+    }
+
+    override fun setListeners() {
+        super.setListeners()
+        binding.topAppBar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStackImmediate()
+        }
+    }
+
+    private fun initCategoriesListAdapter(view: View) {
+        categoryListAdapter = SoundCategoryListAdapter(onSoundCategoryClicked = {
             Toast.makeText(view.context, "OnCategoryClicked ${it.titleEn}", Toast.LENGTH_SHORT).show()
         })
 
         binding.rvSoundsCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvSoundsCategories.adapter = adapter
+        binding.rvSoundsCategories.adapter = categoryListAdapter
         val spaceDecoration = SpaceItemDecoration(
             top = 54,
             left = 0,
@@ -51,15 +73,6 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
             addSpaceAboveFirstItem = true,
             addSpaceBelowLastItem = false
         )
-
         binding.rvSoundsCategories.addItemDecoration(spaceDecoration)
-
-        viewModel.viewModelScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    adapter.submitList(it.soundCategoriesList)
-                }
-            }
-        }
     }
 }
