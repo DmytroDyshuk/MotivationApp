@@ -5,12 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.motivation.affirmations.domain.model.Sound
 import com.motivation.app.databinding.ItemAddFavouriteSoundBinding
 import com.motivation.app.databinding.ListItemFavouriteSoundBinding
 
-class SoundsListAdapter(
+class FavouriteSoundsListAdapter(
     private val onSoundClicked: () -> Unit,
     private val onAddSoundClicked: () -> Unit
 ) : ListAdapter<Sound, RecyclerView.ViewHolder>(diffCallback) {

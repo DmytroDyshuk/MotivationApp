@@ -15,7 +15,6 @@ data class SoundCategoryRemote(
     val titleEn: String,
     val id: Int,
     val ownerId: String?,
-    val updated: Date?,
     val objectId: String
 )
 

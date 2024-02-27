@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
+import com.motivation.affirmations.ui.core.adapters.FavouriteSoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
 import com.motivation.app.R
@@ -53,7 +53,7 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
     }
 
     private fun initSoundsListAdapter() {
-        val adapter = SoundsListAdapter(
+        val adapter = FavouriteSoundsListAdapter(
             onSoundClicked = {
                 Toast.makeText(context, "onSoundClicked", Toast.LENGTH_SHORT).show()
             },

@@ -1,6 +1,7 @@
 package com.motivation.affirmations.data.source.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,4 +15,7 @@ interface SoundCategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllSoundCategories(soundCategories: List<SoundCategoryEntity>)
+
+    @Query("DELETE FROM sound_categories")
+    fun deleteAllSoundCategories()
 }
