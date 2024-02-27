@@ -2,9 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- region Toolbar -->
     <style name="Widget.Motivation.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@android:color/white</item>
         <item name="titleTextAppearance">?attr/textAppearanceHeadline6</item>
-        <item name="android:paddingStart">@dimen/offset_huge</item>
+        <item name="android:paddingStart">@dimen/offset_average</item>
     </style>
     <!-- endregion -->
 
