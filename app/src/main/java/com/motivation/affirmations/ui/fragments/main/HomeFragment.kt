@@ -35,6 +35,7 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.updateSounds()
         initSoundsListAdapter()
     }
 

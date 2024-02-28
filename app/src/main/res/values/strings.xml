@@ -18,6 +18,7 @@
 
     <!-- region ContentDescription -->
     <string name="background_music_tip_description">Choose a sound from our list to play while\nreading your favorite quotes</string>
+    <string name="background_music_no_songs">Sorry there are no songs\nin this category at the moment :(</string>
     <!-- endregion -->
     
 </resources>

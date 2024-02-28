@@ -1,17 +1,16 @@
 package com.motivation.affirmations.ui.fragments.background_music
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.motivation.affirmations.ui.core.adapters.SoundCategoryListAdapter
+import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
 import com.motivation.app.databinding.FragmentBackgroundMusicBinding
@@ -27,6 +26,7 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
     private val viewModel by viewModels<BackgroundMusicViewModel>()
 
     private lateinit var categoryListAdapter: SoundCategoryListAdapter
+    private lateinit var soundsListAdapter: SoundsListAdapter
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -36,15 +36,31 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.refreshSoundCategories()
-        initCategoriesListAdapter(view)
+        initCategoriesListAdapter()
+        initSoundsListAdapter()
     }
 
     override fun addObservers() {
         super.addObservers()
         viewModel.viewModelScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    categoryListAdapter.submitList(it.soundCategoriesList)
+                viewModel.soundCategories.collect {
+                    categoryListAdapter.submitList(it)
+                }
+            }
+        }
+
+        viewModel.viewModelScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.soundList.collect { soundsList ->
+                    soundsListAdapter.submitList(soundsList)
+                    if (soundsList.isEmpty()) {
+                        binding.tvNoSongs.visibility = View.VISIBLE
+                        binding.rvSounds.visibility = View.INVISIBLE
+                    } else {
+                        binding.tvNoSongs.visibility = View.GONE
+                        binding.rvSounds.visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -57,17 +73,26 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
         }
     }
 
-    private fun initCategoriesListAdapter(view: View) {
-        categoryListAdapter = SoundCategoryListAdapter(onSoundCategoryClicked = {
-            Toast.makeText(view.context, "OnCategoryClicked ${it.titleEn}", Toast.LENGTH_SHORT).show()
-        })
+    private fun initSoundsListAdapter() {
+        soundsListAdapter = SoundsListAdapter()
+        binding.rvSounds.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvSounds.adapter = soundsListAdapter
+        //TODO: add divider
+    }
+
+    private fun initCategoriesListAdapter() {
+        categoryListAdapter = SoundCategoryListAdapter(
+            onSoundCategoryClicked = {
+                viewModel.getSoundsByCategory(it.id)
+            }
+        )
 
         binding.rvSoundsCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvSoundsCategories.adapter = categoryListAdapter
         val spaceDecoration = SpaceItemDecoration(
             top = 54,
-            left = 0,
+            left = 24,
             right = 18,
             bottom = 54,
             addSpaceAboveFirstItem = true,

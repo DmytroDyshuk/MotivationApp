@@ -1,7 +1,10 @@
 package com.motivation.affirmations.ui.fragments.background_music
 
 import androidx.lifecycle.viewModelScope
+import com.motivation.affirmations.domain.model.Sound
+import com.motivation.affirmations.domain.model.SoundCategory
 import com.motivation.affirmations.domain.repository.SoundCategoryRepository
+import com.motivation.affirmations.domain.repository.SoundRepository
 import com.motivation.affirmations.ui.core.BaseViewModel
 import com.motivation.affirmations.ui.fragments.background_music.ui_state.BackgroundMusicUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -18,22 +20,25 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class BackgroundMusicViewModel @Inject constructor(
-    private val soundCategoryRepository: SoundCategoryRepository
+    private val soundCategoryRepository: SoundCategoryRepository,
+    private val soundRepository: SoundRepository
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(BackgroundMusicUiState())
     val uiState: StateFlow<BackgroundMusicUiState> = _uiState.asStateFlow()
+
+    private val _soundCategories: MutableStateFlow<List<SoundCategory>> = MutableStateFlow(listOf())
+    val soundCategories: StateFlow<List<SoundCategory>> = _soundCategories
+
+    private val _soundList: MutableStateFlow<List<Sound>> = MutableStateFlow(listOf())
+    val soundList: StateFlow<List<Sound>> = _soundList
 
     private val soundCategoriesFlow = soundCategoryRepository.getSoundCategoriesFlow()
 
     init {
         viewModelScope.launch {
             soundCategoriesFlow.collect { soundCategoriesList ->
-                _uiState.update {
-                    it.copy(
-                        soundCategoriesList = soundCategoriesList
-                    )
-                }
+                _soundCategories.emit(soundCategoriesList)
             }
         }
     }
@@ -43,8 +48,28 @@ class BackgroundMusicViewModel @Inject constructor(
             try {
                 soundCategoryRepository.refreshSoundCategories()
             } catch (exception: Exception) {
-                Timber.tag("BackgroundMusicViewModel").e("e: %s", exception.message)
+                _uiState.update {
+                    it.copy(
+                        exceptionMessage = exception.message
+                    )
+                }
             }
         }
     }
+
+    fun getSoundsByCategory(categoryId: Int = 1) {
+        viewModelScope.launch {
+            try {
+                val soundsListByCategory = soundRepository.getSoundsListByCategory(categoryId)
+                _soundList.emit(soundsListByCategory)
+            } catch (exception: Exception) {
+                _uiState.update {
+                    it.copy(
+                        exceptionMessage = exception.message
+                    )
+                }
+            }
+        }
+    }
+
 }
