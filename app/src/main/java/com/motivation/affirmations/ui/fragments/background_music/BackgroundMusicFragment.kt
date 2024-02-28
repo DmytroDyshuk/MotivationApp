@@ -1,6 +1,7 @@
 package com.motivation.affirmations.ui.fragments.background_music
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.motivation.affirmations.ui.core.adapters.InsetDividerItemDecoration
 import com.motivation.affirmations.ui.core.adapters.SoundCategoryListAdapter
 import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
+import com.motivation.app.R
 import com.motivation.app.databinding.FragmentBackgroundMusicBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -68,16 +71,36 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
 
     override fun setListeners() {
         super.setListeners()
-        binding.topAppBar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStackImmediate()
+        binding.apply {
+            topAppBar.setNavigationOnClickListener {
+                parentFragmentManager.popBackStackImmediate()
+            }
+
+            mbSave.setOnClickListener {
+                saveSelectedSoundsToFavourites()
+            }
         }
+    }
+
+    private fun saveSelectedSoundsToFavourites() {
+        val selectedSounds = soundsListAdapter.currentList.filter { it.isFavorite }
+        viewModel.saveSoundsToFavourites(selectedSounds)
     }
 
     private fun initSoundsListAdapter() {
         soundsListAdapter = SoundsListAdapter()
-        binding.rvSounds.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvSounds.adapter = soundsListAdapter
-        //TODO: add divider
+        val dividerItemDecoration = InsetDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
+        dividerItemDecoration.setInsets(
+            insetLeft = 0,
+            insetTop = 24,
+            insetRight = 0,
+            insetBottom = 24
+        )
+        binding.rvSounds.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = soundsListAdapter
+            addItemDecoration(dividerItemDecoration)
+        }
     }
 
     private fun initCategoriesListAdapter() {
@@ -86,10 +109,6 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
                 viewModel.getSoundsByCategory(it.id)
             }
         )
-
-        binding.rvSoundsCategories.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvSoundsCategories.adapter = categoryListAdapter
         val spaceDecoration = SpaceItemDecoration(
             top = 54,
             left = 24,
@@ -98,6 +117,12 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
             addSpaceAboveFirstItem = true,
             addSpaceBelowLastItem = false
         )
-        binding.rvSoundsCategories.addItemDecoration(spaceDecoration)
+        binding.rvSoundsCategories.apply {
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = categoryListAdapter
+            addItemDecoration(spaceDecoration)
+        }
+
     }
 }

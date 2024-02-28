@@ -9,16 +9,18 @@
     <string name="add">Add</string>
     <!-- endregion -->
 
+    <!-- region BackgroundMusic -->
+    <string name="save">Save</string>
+    <!-- endregion-->
+
     <!-- region ContentDescription -->
     <string name="content_description_add_pause_icon">Add or pause icon</string>
     <string name="content_description_background_image">Background image</string>
     <string name="content_description_sound_image">Sound image</string>
     <string name="content_description_sound_playback_image">Sound playback image</string>
-    <!-- endregion -->
-
-    <!-- region ContentDescription -->
     <string name="background_music_tip_description">Choose a sound from our list to play while\nreading your favorite quotes</string>
     <string name="background_music_no_songs">Sorry there are no songs\nin this category at the moment :(</string>
     <!-- endregion -->
-    
+
+
 </resources>

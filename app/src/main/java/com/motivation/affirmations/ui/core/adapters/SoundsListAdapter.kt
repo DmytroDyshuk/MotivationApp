@@ -19,8 +19,11 @@ class SoundsListAdapter : ListAdapter<Sound, SoundsListAdapter.SoundViewHolder>(
         fun bind(sound: Sound) {
             binding.apply {
                 tvSoundName.text = sound.titleEn
+                cbFavourite.isChecked = sound.isFavorite
+                cbFavourite.setOnCheckedChangeListener { _, isChecked ->
+                    sound.isFavorite = isChecked
+                }
                 glideImageLoader.loadImage(sound.thumbnailName, ivSoundImage)
-                //TODO: bind full info, add playback music logic
             }
         }
     }

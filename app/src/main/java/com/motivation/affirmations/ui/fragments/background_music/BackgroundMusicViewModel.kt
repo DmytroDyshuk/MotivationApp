@@ -72,4 +72,18 @@ class BackgroundMusicViewModel @Inject constructor(
         }
     }
 
+    fun saveSoundsToFavourites(soundsList: List<Sound>) {
+        viewModelScope.launch {
+            try {
+                soundRepository.addSoundsToFavourites(soundsList)
+            } catch (error: Error) {
+                _uiState.update {
+                    it.copy(
+                        errorMessage = error.message
+                    )
+                }
+            }
+        }
+    }
+
 }

@@ -63,4 +63,11 @@
             app:layout_constraintTop_toBottomOf="@id/rv_sounds_categories"
             app:layout_constraintBottom_toBottomOf="parent" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mb_save"
+            style="@style/Widget.Motivation.SaveButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
