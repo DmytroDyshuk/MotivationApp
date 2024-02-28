@@ -1,12 +1,18 @@
 package com.motivation.affirmations.ui.core.adapters
 
+import android.graphics.drawable.AnimationDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.motivation.affirmations.domain.model.Sound
 import com.motivation.affirmations.util.helpers.images_loader.GlideImageLoader
+import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
+import com.motivation.app.R
 import com.motivation.app.databinding.ListItemSoundBinding
 
 class SoundsListAdapter : ListAdapter<Sound, SoundsListAdapter.SoundViewHolder>(DiffCallback) {
@@ -24,6 +30,15 @@ class SoundsListAdapter : ListAdapter<Sound, SoundsListAdapter.SoundViewHolder>(
                     sound.isFavorite = isChecked
                 }
                 glideImageLoader.loadImage(sound.thumbnailName, ivSoundImage)
+
+                setPlaybackClickListener(sound)
+            }
+        }
+
+        private fun setPlaybackClickListener(sound: Sound) {
+            binding.ivPlaybackSound.setOnClickListener {
+                startPlaybackAnimation(binding.ivPlaybackSound)
+                SoundPlayer.play(sound.previewName, SoundPlayer.SoundPlayType.PREVIEW)
             }
         }
     }
@@ -38,6 +53,34 @@ class SoundsListAdapter : ListAdapter<Sound, SoundsListAdapter.SoundViewHolder>(
         val currentSound = getItem(position)
         holder.bind(currentSound)
     }
+
+    private fun startPlaybackAnimation(imageView: ImageView) {
+        val playbackImages = arrayOf(
+            R.drawable.vector_playback_third_icon,
+            R.drawable.vector_playback_second_icon,
+            R.drawable.vector_playback_first_icon
+        )
+        val context = imageView.context
+        val animationDrawable = AnimationDrawable().apply {
+            for (imageResId in playbackImages) {
+                ContextCompat.getDrawable(context, imageResId)?.let { drawable ->
+                    addFrame(drawable, 1000)
+                }
+            }
+            isOneShot = false
+        }
+
+        imageView.setImageDrawable(animationDrawable)
+        animationDrawable.start()
+
+        SoundPlayer.setOnCompletionListener {
+            animationDrawable.stop()
+            AppCompatResources.getDrawable(context, R.drawable.vector_playback_first_icon)?.let {
+                imageView.setImageDrawable(it)
+            }
+        }
+    }
+
 
     companion object DiffCallback : DiffUtil.ItemCallback<Sound>() {
         override fun areItemsTheSame(oldItem: Sound, newItem: Sound): Boolean {
