@@ -1,7 +1,6 @@
 package com.motivation.affirmations.ui.fragments.background_music
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import com.motivation.affirmations.ui.core.adapters.SoundCategoryListAdapter
 import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
-import com.motivation.app.R
+import com.motivation.affirmations.util.helpers.sounds_player.PreviewSoundPlayer
 import com.motivation.app.databinding.FragmentBackgroundMusicBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -30,6 +29,8 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
 
     private lateinit var categoryListAdapter: SoundCategoryListAdapter
     private lateinit var soundsListAdapter: SoundsListAdapter
+
+    private var currentPlayingPosition = -1
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -83,12 +84,31 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
     }
 
     private fun saveSelectedSoundsToFavourites() {
-        val selectedSounds = soundsListAdapter.currentList.filter { it.isFavorite }
+        val selectedSounds = soundsListAdapter.currentList
         viewModel.saveSoundsToFavourites(selectedSounds)
+        parentFragmentManager.popBackStackImmediate()
     }
 
     private fun initSoundsListAdapter() {
-        soundsListAdapter = SoundsListAdapter()
+        soundsListAdapter = SoundsListAdapter(
+            onPlaybackClicked = { soundName, position ->
+                if (position == currentPlayingPosition) {
+                    if (PreviewSoundPlayer.isPlaying()) {
+                        PreviewSoundPlayer.stop()
+                    } else {
+                        PreviewSoundPlayer.play(soundName)
+                    }
+                } else {
+                    if (PreviewSoundPlayer.isPlaying()) {
+                        PreviewSoundPlayer.stop()
+                    }
+
+                    currentPlayingPosition = position
+                    PreviewSoundPlayer.play(soundName)
+                    soundsListAdapter.notifyDataSetChanged()
+                }
+            }
+        )
         val dividerItemDecoration = InsetDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)
         dividerItemDecoration.setInsets(
             insetLeft = 0,
@@ -123,6 +143,6 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
             adapter = categoryListAdapter
             addItemDecoration(spaceDecoration)
         }
-
     }
+
 }

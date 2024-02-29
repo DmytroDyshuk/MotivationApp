@@ -2,17 +2,26 @@ package com.motivation.affirmations.ui.core.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.motivation.affirmations.domain.model.Sound
+import com.motivation.affirmations.util.helpers.images_loader.GlideImageLoader
+import com.motivation.affirmations.util.helpers.sounds_player.MusicPlayer
+import com.motivation.app.R
 import com.motivation.app.databinding.ItemAddFavouriteSoundBinding
 import com.motivation.app.databinding.ListItemFavouriteSoundBinding
 
 class FavouriteSoundsListAdapter(
-    private val onSoundClicked: () -> Unit,
+    private val onSoundClicked: (soundName: String, position: Int) -> Unit,
     private val onAddSoundClicked: () -> Unit
 ) : ListAdapter<Sound, RecyclerView.ViewHolder>(diffCallback) {
+
+    private val glideImageLoader = GlideImageLoader()
+
+    private var selectedItemPosition: Int = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -31,7 +40,7 @@ class FavouriteSoundsListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position > 0) {
             val sound = getItem(position - 1)
-            (holder as? SoundsViewHolder)?.bind(sound)
+            (holder as? SoundsViewHolder)?.bind(sound, position - 1)
         } else {
             (holder as? StaticViewHolder)?.bind()
         }
@@ -47,19 +56,34 @@ class FavouriteSoundsListAdapter(
 
     inner class SoundsViewHolder(
         private val binding: ListItemFavouriteSoundBinding,
-        private val onSoundClicked: () -> Unit
+        private val onSoundClicked: (soundName: String, position: Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(sound: Sound) {
+        fun bind(sound: Sound, position: Int) {
             binding.apply {
-                //TODO: add music image
-//                Glide.with(itemView)
-//                    .load(sound.thumbnailName)
-//                    .into(ivBackgroundImage)
+                tvSoundName.text = sound.titleEn
+                glideImageLoader.loadImage(sound.thumbnailName, ivBackgroundImage)
 
-                tvSoundName.text = sound.soundName
+                if (position == selectedItemPosition) {
+                    setPauseIcon(ivPlayPauseIcon)
+                    MusicPlayer.setOnCompletionListener {
+                        setPlayIcon(ivPlayPauseIcon)
+                    }
+                } else {
+                    setPlayIcon(ivPlayPauseIcon)
+                }
 
-                mcvSoundIcon.setOnClickListener {
-                    onSoundClicked.invoke()
+                ivPlayPauseIcon.setOnClickListener {
+                    if (position == selectedItemPosition) {
+                        setPlayIcon(ivPlayPauseIcon)
+                        onSoundClicked.invoke(sound.soundName, position)
+                    } else {
+                        if (selectedItemPosition != -1) {
+                            notifyItemChanged(selectedItemPosition)
+                        }
+                        selectedItemPosition = position
+                        onSoundClicked.invoke(sound.soundName, position)
+                        notifyDataSetChanged()
+                    }
                 }
             }
         }
@@ -76,6 +100,18 @@ class FavouriteSoundsListAdapter(
                 }
             }
         }
+    }
+
+    private fun setPlayIcon(imageView: ImageView) {
+        imageView.setImageDrawable(
+            AppCompatResources.getDrawable(imageView.context, R.drawable.vector_play_icon)
+        )
+    }
+
+    private fun setPauseIcon(imageView:ImageView) {
+        imageView.setImageDrawable(
+            AppCompatResources.getDrawable(imageView.context, R.drawable.vector_pause_icon)
+        )
     }
 
     companion object {

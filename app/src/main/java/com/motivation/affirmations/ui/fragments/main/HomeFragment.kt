@@ -6,17 +6,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.motivation.affirmations.ui.core.adapters.FavouriteSoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
+import com.motivation.affirmations.util.helpers.sounds_player.MusicPlayer
 import com.motivation.app.R
 import com.motivation.app.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 /**
  * Created by Andriy Deputat email(andriy.deputat@gmail.com) on 19.02.2024.
@@ -26,7 +30,10 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
 
     private val viewModel: HomeViewModel by viewModels()
 
+    private lateinit var favouriteSoundsAdapter: FavouriteSoundsListAdapter
+
     private var isTuneExpanded = false
+    private var currentPlayingPosition = -1
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -53,27 +60,53 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
         }
     }
 
+    override fun addObservers() {
+        super.addObservers()
+        viewModel.viewModelScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    favouriteSoundsAdapter.submitList(it.favouritesSoundsList)
+                }
+            }
+        }
+    }
+
     private fun initSoundsListAdapter() {
-        val adapter = FavouriteSoundsListAdapter(
-            onSoundClicked = {
-                Toast.makeText(context, "onSoundClicked", Toast.LENGTH_SHORT).show()
+        favouriteSoundsAdapter = FavouriteSoundsListAdapter(
+            onSoundClicked = { soundName, position ->
+                if (position == currentPlayingPosition) {
+                    if (MusicPlayer.isPlaying()){
+                        MusicPlayer.stop()
+                    } else {
+                        MusicPlayer.play(soundName)
+                    }
+                } else {
+                    if (MusicPlayer.isPlaying()) {
+                        MusicPlayer.stop()
+                    }
+
+                    currentPlayingPosition = position
+                    MusicPlayer.play(soundName)
+                    favouriteSoundsAdapter.notifyDataSetChanged()
+                }
             },
             onAddSoundClicked = {
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBackgroundMusicFragment())
             }
         )
-        binding.rvFavouriteSounds.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFavouriteSounds.adapter = adapter
         val spaceDecoration = SpaceItemDecoration(
             top = 0,
-            left = 74,
-            right = 74,
+            left = 16,
+            right = 16,
             bottom = 0,
             addSpaceAboveFirstItem = true,
             addSpaceBelowLastItem = true
         )
-        binding.rvFavouriteSounds.addItemDecoration(spaceDecoration)
-        //TODO: adapter submitList
+        binding.apply {
+            rvFavouriteSounds.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            rvFavouriteSounds.adapter = favouriteSoundsAdapter
+            rvFavouriteSounds.addItemDecoration(spaceDecoration)
+        }
     }
 
     private fun toggleTuneIconAndAnimation(context: Context) {
@@ -103,8 +136,10 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
             duration = 450
             start()
         }
-
-        binding.rvFavouriteSounds.isClickable = isTuneExpanded
-        binding.rvFavouriteSounds.isFocusable = isTuneExpanded
+        if (!isTuneExpanded) {
+            binding.rvFavouriteSounds.visibility = View.VISIBLE
+        } else {
+            binding.rvFavouriteSounds.visibility = View.GONE
+        }
     }
 }

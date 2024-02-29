@@ -4,24 +4,13 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import com.motivation.affirmations.util.Defaults
 
-object SoundPlayer {
-    private var onStartListener: (() -> Unit)? = null
+object MusicPlayer {
     private var onCompletionListener: (() -> Unit)? = null
 
     private var mediaPlayer: MediaPlayer? = null
 
-    enum class SoundPlayType {
-        PREVIEW,
-        FULL
-    }
-
-    fun play(soundName: String, type: SoundPlayType) {
+    fun play(soundName: String) {
         stop()
-
-        val url = when (type) {
-            SoundPlayType.PREVIEW -> Defaults.SOUND_PREVIEW_FOLDER_URL + soundName
-            SoundPlayType.FULL -> Defaults.SOUND_FILES_FOLDER_URL + soundName
-        }
 
         mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
@@ -32,11 +21,10 @@ object SoundPlayer {
             )
 
             try {
-                setDataSource(url)
+                setDataSource(Defaults.SOUND_FILES_FOLDER_URL + soundName)
                 prepareAsync()
                 setOnPreparedListener { mp ->
                     mp.start()
-                    onStartListener?.invoke()
                 }
                 setOnCompletionListener {
                     onCompletionListener?.invoke()
@@ -57,8 +45,8 @@ object SoundPlayer {
         }
     }
 
-    fun setOnStartListener(listener: () -> Unit) {
-        onStartListener = listener
+    fun isPlaying(): Boolean {
+        return mediaPlayer?.isPlaying ?: false
     }
 
     fun setOnCompletionListener(listener: () -> Unit) {

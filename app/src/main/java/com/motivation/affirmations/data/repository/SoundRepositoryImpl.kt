@@ -1,6 +1,5 @@
 package com.motivation.affirmations.data.repository
 
-import android.util.Log
 import com.motivation.affirmations.data.source.local.dao.SoundDao
 import com.motivation.affirmations.data.source.local.entities.asListDomainModel
 import com.motivation.affirmations.data.source.remote.api.SoundApi
@@ -14,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
@@ -47,7 +45,7 @@ class SoundRepositoryImpl @Inject constructor(
 
     override suspend fun addSoundsToFavourites(sounds: List<Sound>) {
         withContext(ioDispatcher) {
-            soundDao.insertAllSounds(sounds.map { it.copy(isFavorite = true).asEntity() })
+            soundDao.insertAllSounds(sounds.map { it.copy().asEntity() })
         }
     }
 

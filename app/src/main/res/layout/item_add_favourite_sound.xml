@@ -23,7 +23,7 @@
                 android:contentDescription="@string/content_description_background_image" />
 
             <ImageView
-                android:id="@+id/iv_add_pause_icon"
+                android:id="@+id/iv_play_pause_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/vector_add_icon"
