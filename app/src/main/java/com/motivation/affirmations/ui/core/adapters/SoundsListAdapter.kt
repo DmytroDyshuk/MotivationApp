@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.motivation.affirmations.domain.model.Sound
 import com.motivation.affirmations.util.helpers.images_loader.GlideImageLoader
-import com.motivation.affirmations.util.helpers.sounds_player.PreviewSoundPlayer
+import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.R
 import com.motivation.app.databinding.ListItemSoundBinding
 
@@ -93,7 +93,7 @@ class SoundsListAdapter(
         currentPlayingImageView = imageView
         currentAnimationDrawable = animationDrawable
 
-        PreviewSoundPlayer.setOnCompletionListener {
+        SoundPlayer.setOnCompletionListener {
             animationDrawable.stop()
             AppCompatResources.getDrawable(context, R.drawable.vector_playback_first_icon)?.let {
                 imageView.setImageDrawable(it)

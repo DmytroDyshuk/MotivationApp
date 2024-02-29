@@ -2,10 +2,9 @@ package com.motivation.affirmations.util.helpers.sounds_player
 
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.widget.SeekBar
 import com.motivation.affirmations.util.Defaults
 
-object MusicPlayer {
+object SoundPlayer {
     private var onCompletionListener: (() -> Unit)? = null
     private var onStartListener: (() -> Unit)? = null
 
@@ -13,8 +12,18 @@ object MusicPlayer {
     private var progressListener: ((Int) -> Unit)? = null
     private var totalSoundDuration: Int = 0
 
-    fun play(soundName: String) {
+    enum class SoundPlayType {
+        PREVIEW,
+        FULL
+    }
+
+    fun play(soundName: String, type: SoundPlayType) {
         stop()
+
+        val url = when (type) {
+            SoundPlayType.PREVIEW -> Defaults.SOUND_PREVIEW_FOLDER_URL + soundName
+            SoundPlayType.FULL -> Defaults.SOUND_FILES_FOLDER_URL + soundName
+        }
 
         mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
@@ -25,7 +34,7 @@ object MusicPlayer {
             )
 
             try {
-                setDataSource(Defaults.SOUND_FILES_FOLDER_URL + soundName)
+                setDataSource(url)
                 prepareAsync()
                 setOnPreparedListener { mp ->
                     mp.start()

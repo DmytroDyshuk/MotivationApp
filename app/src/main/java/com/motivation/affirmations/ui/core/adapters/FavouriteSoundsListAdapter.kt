@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.motivation.affirmations.domain.model.Sound
 import com.motivation.affirmations.util.helpers.images_loader.GlideImageLoader
-import com.motivation.affirmations.util.helpers.sounds_player.MusicPlayer
+import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.R
 import com.motivation.app.databinding.ItemAddFavouriteSoundBinding
 import com.motivation.app.databinding.ListItemFavouriteSoundBinding
@@ -67,7 +67,7 @@ class FavouriteSoundsListAdapter(
 
                 if (position == selectedItemPosition) {
                     setPauseIconAndShowProgress(ivPlayPauseIcon, pbSoundPlayProgress)
-                    MusicPlayer.setOnCompletionListener {
+                    SoundPlayer.setOnCompletionListener {
                         setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                     }
                 } else {
@@ -125,7 +125,7 @@ class FavouriteSoundsListAdapter(
 
     private fun showProgress(progressBar: ProgressBar) {
         progressBar.visibility = View.VISIBLE
-        MusicPlayer.setProgressListener {
+        SoundPlayer.setProgressListener {
             progressBar.progress = it
         }
     }

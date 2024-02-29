@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.motivation.affirmations.ui.core.adapters.FavouriteSoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
-import com.motivation.affirmations.util.helpers.sounds_player.MusicPlayer
+import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.R
 import com.motivation.app.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,8 +49,8 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
     override fun onStop() {
         super.onStop()
         isTuneExpanded = !isTuneExpanded
-        if (MusicPlayer.isPlaying()) {
-            MusicPlayer.stop()
+        if (SoundPlayer.isPlaying()) {
+            SoundPlayer.stop()
         }
     }
 
@@ -78,18 +78,18 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
         favouriteSoundsAdapter = FavouriteSoundsListAdapter(
             onSoundClicked = { soundName, position ->
                 if (position == currentPlayingPosition) {
-                    if (MusicPlayer.isPlaying()){
-                        MusicPlayer.stop()
+                    if (SoundPlayer.isPlaying()){
+                        SoundPlayer.stop()
                     } else {
-                        MusicPlayer.play(soundName)
+                        SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.FULL)
                     }
                 } else {
-                    if (MusicPlayer.isPlaying()) {
-                        MusicPlayer.stop()
+                    if (SoundPlayer.isPlaying()) {
+                        SoundPlayer.stop()
                     }
 
                     currentPlayingPosition = position
-                    MusicPlayer.play(soundName)
+                    SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.FULL)
                     favouriteSoundsAdapter.notifyDataSetChanged()
                 }
             },

@@ -14,7 +14,7 @@ import com.motivation.affirmations.ui.core.adapters.SoundCategoryListAdapter
 import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
-import com.motivation.affirmations.util.helpers.sounds_player.PreviewSoundPlayer
+import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.databinding.FragmentBackgroundMusicBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -46,8 +46,8 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
 
     override fun onStop() {
         super.onStop()
-        if (PreviewSoundPlayer.isPlaying()) {
-            PreviewSoundPlayer.stop()
+        if (SoundPlayer.isPlaying()) {
+            SoundPlayer.stop()
         }
     }
 
@@ -100,18 +100,18 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
         soundsListAdapter = SoundsListAdapter(
             onPlaybackClicked = { soundName, position ->
                 if (position == currentPlayingPosition) {
-                    if (PreviewSoundPlayer.isPlaying()) {
-                        PreviewSoundPlayer.stop()
+                    if (SoundPlayer.isPlaying()) {
+                        SoundPlayer.stop()
                     } else {
-                        PreviewSoundPlayer.play(soundName)
+                        SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
                     }
                 } else {
-                    if (PreviewSoundPlayer.isPlaying()) {
-                        PreviewSoundPlayer.stop()
+                    if (SoundPlayer.isPlaying()) {
+                        SoundPlayer.stop()
                     }
 
                     currentPlayingPosition = position
-                    PreviewSoundPlayer.play(soundName)
+                    SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
                     soundsListAdapter.notifyDataSetChanged()
                 }
             }
