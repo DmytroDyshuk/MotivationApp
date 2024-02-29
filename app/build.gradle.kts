@@ -113,13 +113,13 @@ dependencies {
 
     implementation(libs.timber)
 
-    //Glide
+    // Glide
     implementation(libs.glide)
 
-    //Moshi
+    // Moshi
     implementation(libs.moshi)
 
-    //Retrofit with Moshi Converter
+    // Retrofit with Moshi Converter
     implementation(libs.retrofit)
     implementation(libs.okhttp3)
 
@@ -129,7 +129,7 @@ dependencies {
     implementation(libs.backendless)
 
     implementation(libs.socket.io) {
-        //      excluding org.json which is provided by Android
+        // excluding org.json which is provided by Android
         exclude("org.json", "json")
     }
 
