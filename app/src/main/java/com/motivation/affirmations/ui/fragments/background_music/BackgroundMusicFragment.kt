@@ -44,6 +44,13 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
         initSoundsListAdapter()
     }
 
+    override fun onStop() {
+        super.onStop()
+        if (PreviewSoundPlayer.isPlaying()) {
+            PreviewSoundPlayer.stop()
+        }
+    }
+
     override fun addObservers() {
         super.addObservers()
         viewModel.viewModelScope.launch {

@@ -49,6 +49,9 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
     override fun onStop() {
         super.onStop()
         isTuneExpanded = !isTuneExpanded
+        if (MusicPlayer.isPlaying()) {
+            MusicPlayer.stop()
+        }
     }
 
     override fun setListeners() {
