@@ -20,9 +20,7 @@
 
     <!-- region ProgressBar -->
     <style name="Widget.Motivation.ProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:minHeight">@dimen/progress_bar_size</item>
-        <item name="android:minWidth">@dimen/progress_bar_size</item>
-        <item name="android:elevation">16dp</item>
+
     </style>
     <!-- endregion -->
 

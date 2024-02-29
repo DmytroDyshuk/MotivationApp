@@ -8,35 +8,58 @@
     android:layout_height="wrap_content"
     android:gravity="center">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mcv_sound_icon"
-        style="@style/Widget.Motivation.CircleCardView">
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_sound_icon"
+            style="@style/Widget.Motivation.CircleCardView">
 
-            <ImageView
-                android:id="@+id/iv_background_image"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:contentDescription="@string/content_description_background_image" />
+                android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/iv_play_pause_icon"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:contentDescription="@string/content_description_add_pause_icon"
-                android:padding="12dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                <ImageView
+                    android:id="@+id/iv_background_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/content_description_background_image" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/iv_play_pause_icon"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:contentDescription="@string/content_description_add_pause_icon"
+                    android:padding="12dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
-    </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <ProgressBar
+            android:id="@+id/pb_sound_play_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:progressDrawable="@drawable/circular_progress_bar"
+            android:background="@drawable/circle_shape"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:max="100"
+            android:visibility="invisible"
+            android:padding="20dp"
+            android:layout_alignStart="@id/mcv_sound_icon"
+            android:layout_alignEnd="@id/mcv_sound_icon"
+            android:layout_alignTop="@id/mcv_sound_icon"
+            android:layout_alignBottom="@id/mcv_sound_icon"/>
+
+    </RelativeLayout>
     
     <TextView
         android:id="@+id/tv_sound_name"

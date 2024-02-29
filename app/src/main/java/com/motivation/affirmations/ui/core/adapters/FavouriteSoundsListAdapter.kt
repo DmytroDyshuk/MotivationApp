@@ -1,8 +1,10 @@
 package com.motivation.affirmations.ui.core.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -64,17 +66,17 @@ class FavouriteSoundsListAdapter(
                 glideImageLoader.loadImage(sound.thumbnailName, ivBackgroundImage)
 
                 if (position == selectedItemPosition) {
-                    setPauseIcon(ivPlayPauseIcon)
+                    setPauseIconAndShowProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                     MusicPlayer.setOnCompletionListener {
-                        setPlayIcon(ivPlayPauseIcon)
+                        setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                     }
                 } else {
-                    setPlayIcon(ivPlayPauseIcon)
+                    setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                 }
 
                 ivPlayPauseIcon.setOnClickListener {
                     if (position == selectedItemPosition) {
-                        setPlayIcon(ivPlayPauseIcon)
+                        setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                         onSoundClicked.invoke(sound.soundName, position)
                     } else {
                         if (selectedItemPosition != -1) {
@@ -102,16 +104,30 @@ class FavouriteSoundsListAdapter(
         }
     }
 
-    private fun setPlayIcon(imageView: ImageView) {
+    private fun setPlayIconAndHideProgress(imageView: ImageView, progressBar: ProgressBar) {
         imageView.setImageDrawable(
             AppCompatResources.getDrawable(imageView.context, R.drawable.vector_play_icon)
         )
+        hideProgress(progressBar)
     }
 
-    private fun setPauseIcon(imageView:ImageView) {
+    private fun setPauseIconAndShowProgress(imageView:ImageView, progressBar: ProgressBar) {
         imageView.setImageDrawable(
             AppCompatResources.getDrawable(imageView.context, R.drawable.vector_pause_icon)
         )
+        showProgress(progressBar)
+    }
+
+    private fun hideProgress(progressBar: ProgressBar) {
+        progressBar.progress = 0
+        progressBar.visibility = View.INVISIBLE
+    }
+
+    private fun showProgress(progressBar: ProgressBar) {
+        progressBar.visibility = View.VISIBLE
+        MusicPlayer.setProgressListener {
+            progressBar.progress = it
+        }
     }
 
     companion object {
