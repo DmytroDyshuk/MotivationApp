@@ -7,7 +7,7 @@ import com.motivation.affirmations.data.source.local.dao.SoundDao
 import com.motivation.affirmations.data.source.local.entities.SoundCategoryEntity
 import com.motivation.affirmations.data.source.local.entities.SoundEntity
 
-@Database(entities = [SoundEntity::class, SoundCategoryEntity::class], version = 2)
+@Database(entities = [SoundEntity::class, SoundCategoryEntity::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract val soundDao: SoundDao
     abstract val soundCategoryDao: SoundCategoryDao
