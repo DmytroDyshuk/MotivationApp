@@ -26,13 +26,13 @@ class SoundCategoryRepositoryImpl@Inject constructor(
 ) : SoundCategoryRepository {
 
     override fun getSoundCategoriesFlow(): StateFlow<List<SoundCategory>> {
-       return soundCategoryDao.getAllSoundCategories().map {
+        return soundCategoryDao.getAllSoundCategories().map {
             it.asListDomainModel()
-       }.stateIn(
-           scope = externalScope,
-           started = SharingStarted.WhileSubscribed(5000),
-           initialValue = listOf()
-       )
+        }.stateIn(
+            scope = externalScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = listOf()
+        )
     }
 
     override suspend fun refreshSoundCategories() {

@@ -32,6 +32,7 @@ class FavouriteSoundsListAdapter(
                 val binding = ItemAddFavouriteSoundBinding.inflate(layoutInflater, parent, false)
                 StaticViewHolder(binding, onAddSoundClicked)
             }
+
             else -> {
                 val binding = ListItemFavouriteSoundBinding.inflate(layoutInflater, parent, false)
                 SoundsViewHolder(binding, onSoundClicked)
