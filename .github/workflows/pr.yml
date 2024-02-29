@@ -18,10 +18,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - name: lint
-        run: ./gradlew lint
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+      - name: lint
+        run: ./gradlew lint
   ktlint:
     name: "Check project by ktlint"
     runs-on: ubuntu-latest
@@ -34,7 +34,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-      - name: ktlint
-        run: ./gradlew ktlintCheck
       - name: Make gradlew executable
         run: chmod +x ./gradlew
+      - name: ktlint
+        run: ./gradlew ktlintCheck
