@@ -6,6 +6,5 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_rounded_light_blue_background"
-    android:fontFamily="@font/dm_sans_medium"
-    android:textSize="14sp"
+    style="@style/TextAppearance.Motivation.OnPrimaryTextMedium"
     tools:text="Category name" />

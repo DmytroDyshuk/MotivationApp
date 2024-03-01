@@ -12,8 +12,8 @@
         android:id="@+id/cb_favourite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:button="@drawable/checkbox_selector"
-        app:useMaterialThemeColors="false"/>
+        style="@style/Widget.Motivation.CheckBox"
+        app:useMaterialThemeColors="false" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mcv_sound_image"
@@ -34,10 +34,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        style="@style/TextAppearance.Motivation.SoundName"
         tools:text="Sound name"
-        android:textSize="16sp"
-        android:fontFamily="@font/dm_sans_medium"
-        android:textColor="@color/pickled_bluewood"
         android:layout_marginStart="12dp" />
 
     <ImageView

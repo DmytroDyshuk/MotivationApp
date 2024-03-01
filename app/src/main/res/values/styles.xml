@@ -40,9 +40,9 @@
     <style name="Widget.Motivation.SaveButton" parent="Widget.Motivation.Button">
         <item name="android:layout_width">@dimen/button_save_wight</item>
         <item name="android:layout_height">@dimen/button_save_height</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="backgroundColor">@color/pickled_bluewood</item>
-        <item name="backgroundTint">@color/pickled_bluewood</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="backgroundColor">?attr/colorOnPrimary</item>
+        <item name="backgroundTint">?attr/colorOnPrimary</item>
         <item name="android:fontFamily">@font/dm_sans_medium</item>
         <item name="android:text">@string/save</item>
         <item name="android:layout_marginBottom">14dp</item>
@@ -85,8 +85,9 @@
     <!-- endregion -->
 
     <!-- region CheckBox -->
-    <style name="Widget.Motivation.CheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+    <style name="Widget.Motivation.CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:button">@drawable/checkbox_selector</item>
     </style>
     <!-- endregion -->
 

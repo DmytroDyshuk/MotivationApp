@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.motivation.affirmations.domain.model.SoundCategory
 import com.motivation.app.R
-import com.motivation.app.databinding.ListItemSoundCategoryBinding
+import com.motivation.app.databinding.ListItemCategoryBinding
 
 class SoundCategoryListAdapter(
     private val onSoundCategoryClicked: (soundCategory: SoundCategory) -> Unit
@@ -21,7 +21,7 @@ class SoundCategoryListAdapter(
     }
 
     inner class SoundCategoryViewHolder(
-        private val binding: ListItemSoundCategoryBinding,
+        private val binding: ListItemCategoryBinding,
         private val onSoundCategoryClicked: (soundCategory: SoundCategory) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(soundCategory: SoundCategory, position: Int) {
@@ -49,7 +49,7 @@ class SoundCategoryListAdapter(
         viewType: Int
     ): SoundCategoryListAdapter.SoundCategoryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ListItemSoundCategoryBinding.inflate(layoutInflater, parent, false)
+        val binding = ListItemCategoryBinding.inflate(layoutInflater, parent, false)
         return SoundCategoryViewHolder(binding, onSoundCategoryClicked)
     }
 
