@@ -33,12 +33,17 @@ class BackgroundMusicViewModel @Inject constructor(
     private val _soundList: MutableStateFlow<List<Sound>> = MutableStateFlow(listOf())
     val soundList: StateFlow<List<Sound>> = _soundList
 
-    private val soundCategoriesFlow = soundCategoryRepository.getSoundCategoriesFlow()
-
     init {
         viewModelScope.launch {
-            soundCategoriesFlow.collect { soundCategoriesList ->
-                _soundCategories.emit(soundCategoriesList)
+            try {
+                val soundCategories = soundCategoryRepository.getSoundCategories()
+                _soundCategories.emit(soundCategories)
+            } catch (error: Error) {
+                _uiState.update {
+                    it.copy(
+                        errorMessage = error.message
+                    )
+                }
             }
         }
     }
@@ -47,10 +52,10 @@ class BackgroundMusicViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 soundCategoryRepository.refreshSoundCategories()
-            } catch (exception: Exception) {
+            } catch (error: Error) {
                 _uiState.update {
                     it.copy(
-                        exceptionMessage = exception.message
+                        errorMessage = error.message
                     )
                 }
             }
@@ -62,10 +67,10 @@ class BackgroundMusicViewModel @Inject constructor(
             try {
                 val soundsListByCategory = soundRepository.getSoundsListByCategory(categoryId)
                 _soundList.emit(soundsListByCategory)
-            } catch (exception: Exception) {
+            } catch (error: Error) {
                 _uiState.update {
                     it.copy(
-                        exceptionMessage = exception.message
+                        errorMessage = error.message
                     )
                 }
             }

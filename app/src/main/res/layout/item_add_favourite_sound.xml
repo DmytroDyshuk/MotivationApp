@@ -44,6 +44,6 @@
         android:background="@drawable/shape_rounded_translucent_background"
         style="@style/TextAppearance.Motivation.DefaultFavouriteSoundTitle"
         android:layout_marginTop="4dp"
-        android:text="@string/add"/>
+        android:text="@string/add" />
 
 </LinearLayout>

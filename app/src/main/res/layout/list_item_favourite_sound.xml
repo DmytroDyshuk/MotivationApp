@@ -69,6 +69,6 @@
         style="@style/TextAppearance.Motivation.DefaultFavouriteSoundTitle"
         android:maxLength="8"
         android:layout_marginTop="4dp"
-        tools:text="Sound name"/>
+        tools:text="Sound name" />
 
 </LinearLayout>

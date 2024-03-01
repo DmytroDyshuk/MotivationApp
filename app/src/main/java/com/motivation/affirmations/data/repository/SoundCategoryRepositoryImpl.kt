@@ -21,18 +21,11 @@ import javax.inject.Singleton
 class SoundCategoryRepositoryImpl@Inject constructor(
     private val soundCategoryApi: SoundCategoryApi,
     private val soundCategoryDao: SoundCategoryDao,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val externalScope: CoroutineScope
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : SoundCategoryRepository {
 
-    override fun getSoundCategoriesFlow(): StateFlow<List<SoundCategory>> {
-        return soundCategoryDao.getAllSoundCategories().map {
-            it.asListDomainModel()
-        }.stateIn(
-            scope = externalScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = listOf()
-        )
+    override suspend fun getSoundCategories() = withContext(ioDispatcher) {
+        return@withContext soundCategoryDao.getAllSoundCategories().asListDomainModel()
     }
 
     override suspend fun refreshSoundCategories() {

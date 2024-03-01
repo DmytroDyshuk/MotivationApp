@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SoundCategoryDao {
     @Query("SELECT * FROM sound_categories")
-    fun getAllSoundCategories(): Flow<List<SoundCategoryEntity>>
+    fun getAllSoundCategories(): List<SoundCategoryEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllSoundCategories(soundCategories: List<SoundCategoryEntity>)

@@ -25,7 +25,7 @@ class SoundRepositoryImpl @Inject constructor(
     private val soundDao: SoundDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val externalScope: CoroutineScope
-): SoundRepository {
+) : SoundRepository {
 
     override suspend fun getSoundsListByCategory(categoryId: Int) = withContext(ioDispatcher) {
         return@withContext soundDao.getSoundsByCategoryId(categoryId).asListDomainModel()
