@@ -10,8 +10,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.motivation.affirmations.ui.core.adapters.InsetDividerItemDecoration
-import com.motivation.affirmations.ui.core.adapters.SoundCategoryListAdapter
-import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
+import com.motivation.affirmations.ui.core.adapters.sound_categories.SoundCategoryListAdapter
+import com.motivation.affirmations.ui.core.adapters.sounds.SoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
 import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer

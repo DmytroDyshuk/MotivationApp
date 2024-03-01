@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.core.adapters
+package com.motivation.affirmations.ui.core.adapters.sounds
 
 import android.graphics.drawable.AnimationDrawable
 import android.view.LayoutInflater

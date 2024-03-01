@@ -13,8 +13,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.motivation.affirmations.ui.core.adapters.FavouriteSoundsListAdapter
+import com.motivation.affirmations.domain.model.Sound
+import com.motivation.affirmations.ui.core.adapters.favourite_sounds.FavouriteSoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
+import com.motivation.affirmations.ui.core.adapters.favourite_sounds.FavouriteSoundItemClickListener
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
 import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.R
@@ -26,7 +28,7 @@ import kotlinx.coroutines.launch
  * Created by Andriy Deputat email(andriy.deputat@gmail.com) on 19.02.2024.
  */
 @AndroidEntryPoint
-class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
+class HomeFragment : ViewBindingFragment<FragmentHomeBinding>(), FavouriteSoundItemClickListener {
 
     private val viewModel: HomeViewModel by viewModels()
 
@@ -54,6 +56,13 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        SoundPlayer.setOnCompletionListener {
+            favouriteSoundsAdapter.updateUiOnSoundCompletion()
+        }
+    }
+
     override fun setListeners() {
         super.setListeners()
         binding.btnSelectTune.setOnClickListener {
@@ -75,28 +84,7 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
     }
 
     private fun initSoundsListAdapter() {
-        favouriteSoundsAdapter = FavouriteSoundsListAdapter(
-            onSoundClicked = { soundName, position ->
-                if (position == currentPlayingPosition) {
-                    if (SoundPlayer.isPlaying()){
-                        SoundPlayer.stop()
-                    } else {
-                        SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.FULL)
-                    }
-                } else {
-                    if (SoundPlayer.isPlaying()) {
-                        SoundPlayer.stop()
-                    }
-
-                    currentPlayingPosition = position
-                    SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.FULL)
-                    favouriteSoundsAdapter.notifyDataSetChanged()
-                }
-            },
-            onAddSoundClicked = {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBackgroundMusicFragment())
-            }
-        )
+        favouriteSoundsAdapter = FavouriteSoundsListAdapter(this)
         val spaceDecoration = SpaceItemDecoration(
             top = 0,
             left = 16,
@@ -144,5 +132,27 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
         } else {
             binding.rvFavouriteSounds.visibility = View.GONE
         }
+    }
+
+    override fun onSoundClicked(sound: Sound, position: Int) {
+        if (position == currentPlayingPosition) {
+            if (SoundPlayer.isPlaying()) {
+                SoundPlayer.stop()
+            } else {
+                SoundPlayer.play(sound.soundName, SoundPlayer.SoundPlayType.FULL)
+            }
+        } else {
+            if (SoundPlayer.isPlaying()) {
+                SoundPlayer.stop()
+            }
+
+            currentPlayingPosition = position
+            SoundPlayer.play(sound.soundName, SoundPlayer.SoundPlayType.FULL)
+            favouriteSoundsAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onAddSoundClicked() {
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBackgroundMusicFragment())
     }
 }

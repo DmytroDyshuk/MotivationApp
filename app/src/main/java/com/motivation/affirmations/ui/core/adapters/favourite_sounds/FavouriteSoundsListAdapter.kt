@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.core.adapters
+package com.motivation.affirmations.ui.core.adapters.favourite_sounds
 
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +17,7 @@ import com.motivation.app.databinding.ItemAddFavouriteSoundBinding
 import com.motivation.app.databinding.ListItemFavouriteSoundBinding
 
 class FavouriteSoundsListAdapter(
-    private val onSoundClicked: (soundName: String, position: Int) -> Unit,
-    private val onAddSoundClicked: () -> Unit
+    private val soundItemClickListener: FavouriteSoundItemClickListener
 ) : ListAdapter<Sound, RecyclerView.ViewHolder>(diffCallback) {
 
     private val glideImageLoader = GlideImageLoader()
@@ -30,12 +29,12 @@ class FavouriteSoundsListAdapter(
         return when (viewType) {
             VIEW_TYPE_STATIC -> {
                 val binding = ItemAddFavouriteSoundBinding.inflate(layoutInflater, parent, false)
-                StaticViewHolder(binding, onAddSoundClicked)
+                StaticViewHolder(binding)
             }
 
             else -> {
                 val binding = ListItemFavouriteSoundBinding.inflate(layoutInflater, parent, false)
-                SoundsViewHolder(binding, onSoundClicked)
+                SoundsViewHolder(binding)
             }
         }
     }
@@ -58,8 +57,7 @@ class FavouriteSoundsListAdapter(
     }
 
     inner class SoundsViewHolder(
-        private val binding: ListItemFavouriteSoundBinding,
-        private val onSoundClicked: (soundName: String, position: Int) -> Unit
+        private val binding: ListItemFavouriteSoundBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(sound: Sound, position: Int) {
             binding.apply {
@@ -68,9 +66,6 @@ class FavouriteSoundsListAdapter(
 
                 if (position == selectedItemPosition) {
                     setPauseIconAndShowProgress(ivPlayPauseIcon, pbSoundPlayProgress)
-                    SoundPlayer.setOnCompletionListener {
-                        setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
-                    }
                 } else {
                     setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                 }
@@ -78,31 +73,34 @@ class FavouriteSoundsListAdapter(
                 ivPlayPauseIcon.setOnClickListener {
                     if (position == selectedItemPosition) {
                         setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
-                        onSoundClicked.invoke(sound.soundName, position)
                     } else {
                         if (selectedItemPosition != -1) {
                             notifyItemChanged(selectedItemPosition)
                         }
                         selectedItemPosition = position
-                        onSoundClicked.invoke(sound.soundName, position)
-                        notifyDataSetChanged()
+                        setPauseIconAndShowProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                     }
+                    soundItemClickListener.onSoundClicked(sound, position)
                 }
             }
         }
     }
 
     inner class StaticViewHolder(
-        private val binding: ItemAddFavouriteSoundBinding,
-        private val onAddSoundClicked: () -> Unit
+        private val binding: ItemAddFavouriteSoundBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             binding.apply {
                 mcvAddSoundIcon.setOnClickListener {
-                    onAddSoundClicked.invoke()
+                    soundItemClickListener.onAddSoundClicked()
                 }
             }
         }
+    }
+
+    fun updateUiOnSoundCompletion() {
+        selectedItemPosition = -1
+        notifyDataSetChanged()
     }
 
     private fun setPlayIconAndHideProgress(imageView: ImageView, progressBar: ProgressBar) {

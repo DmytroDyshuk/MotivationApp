@@ -1,4 +1,4 @@
-package com.motivation.affirmations.ui.core.adapters
+package com.motivation.affirmations.ui.core.adapters.sound_categories
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -47,13 +47,13 @@ class SoundCategoryListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): SoundCategoryListAdapter.SoundCategoryViewHolder {
+    ): SoundCategoryViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = ListItemCategoryBinding.inflate(layoutInflater, parent, false)
         return SoundCategoryViewHolder(binding, onSoundCategoryClicked)
     }
 
-    override fun onBindViewHolder(holder: SoundCategoryListAdapter.SoundCategoryViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SoundCategoryViewHolder, position: Int) {
         val currentCategory = getItem(position)
         holder.bind(currentCategory, position)
     }
