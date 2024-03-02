@@ -1,98 +1,80 @@
 package com.motivation.affirmations.util.helpers.sounds_player
 
-import android.media.AudioAttributes
 import android.media.MediaPlayer
 import com.motivation.affirmations.util.Defaults
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object SoundPlayer {
-    private var onCompletionListener: (() -> Unit)? = null
-    private var onStartListener: (() -> Unit)? = null
-
-    private var mediaPlayer: MediaPlayer? = null
-    private var progressListener: ((Int) -> Unit)? = null
-    private var totalSoundDuration: Int = 0
-
-    enum class SoundPlayType {
-        PREVIEW,
-        FULL
+@Singleton
+class SoundPlayer @Inject constructor(
+    private val externalScope: CoroutineScope
+) {
+    private var mediaPlayer = MediaPlayer().apply {
+        setOnPreparedListener {
+            start()
+            totalSoundDuration = it.duration
+            startProgressListener()
+        }
     }
 
-    fun play(soundName: String, type: SoundPlayType) {
-        stop()
+    private var totalSoundDuration: Int = 0
+    private var currentPlayingSoundName = ""
+    private var progressJob: Job? = null
 
+    val soundProgressFlow = MutableStateFlow(0)
+
+    fun play(soundName: String, type: SoundPlayType, soundCompletionListener: SoundCompletionListener) {
         val url = when (type) {
             SoundPlayType.PREVIEW -> Defaults.SOUND_PREVIEW_FOLDER_URL + soundName
             SoundPlayType.FULL -> Defaults.SOUND_FILES_FOLDER_URL + soundName
         }
 
-        mediaPlayer = MediaPlayer().apply {
-            setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .build()
-            )
-
-            try {
+        if (mediaPlayer.isPlaying && currentPlayingSoundName == soundName) {
+            mediaPlayer.stop()
+        } else {
+            mediaPlayer.run {
+                reset()
                 setDataSource(url)
-                prepareAsync()
-                setOnPreparedListener { mp ->
-                    mp.start()
-                    totalSoundDuration = mp.duration
-                    startProgressListener()
-                    onStartListener?.invoke()
-                }
                 setOnCompletionListener {
-                    onCompletionListener?.invoke()
+                    soundCompletionListener.onSoundComplete()
+                    releasePlayer()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+                prepareAsync()
             }
+            currentPlayingSoundName = soundName
         }
     }
 
     fun stop() {
-        mediaPlayer?.let {
-            if (it.isPlaying) {
-                it.stop()
-            }
-            it.release()
-            mediaPlayer = null
-        }
-    }
-
-    fun isPlaying(): Boolean {
-        return mediaPlayer?.isPlaying ?: false
-    }
-
-    fun setOnCompletionListener(listener: () -> Unit) {
-        onCompletionListener = listener
-    }
-
-    fun setOnStartListener(listener: () -> Unit) {
-        onStartListener = listener
-    }
-
-    fun setProgressListener(listener: (Int) -> Unit) {
-        progressListener = listener
+        mediaPlayer.stop()
+        releasePlayer()
     }
 
     private fun startProgressListener() {
-        mediaPlayer?.let { player ->
-            Thread {
-                while (true) {
-                    try {
-                        if (!player.isPlaying) break
+        progressJob?.cancel()
+        progressJob = externalScope.launch {
+            while (true) {
+                mediaPlayer.let { player ->
+                    if (player.isPlaying) {
                         val currentPosition = player.currentPosition
                         val progress = (currentPosition.toDouble() / totalSoundDuration * 100).toInt()
-                        progressListener?.invoke(progress)
-                        Thread.sleep(1000)
-                    } catch (e: IllegalStateException) {
-                        break
+                        soundProgressFlow.emit(progress)
                     }
                 }
-            }.start()
+                delay(100)
+            }
         }
+    }
+
+    private fun releasePlayer() {
+        mediaPlayer.release()
+        progressJob?.cancel()
+        progressJob = null
     }
 
 }

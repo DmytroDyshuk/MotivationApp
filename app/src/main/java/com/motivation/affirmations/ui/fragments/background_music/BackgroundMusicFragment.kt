@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,8 @@ import com.motivation.affirmations.ui.fragments.ViewBindingFragment
 import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.databinding.FragmentBackgroundMusicBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 /**
@@ -46,13 +49,21 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
 
     override fun onStop() {
         super.onStop()
-        if (SoundPlayer.isPlaying()) {
-            SoundPlayer.stop()
-        }
+        viewModel.stopSound()
     }
 
     override fun addObservers() {
         super.addObservers()
+        viewModel.viewModelScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    if (it.soundCompleted == true) {
+                        soundsListAdapter.updateUiOnSoundCompletion()
+                    }
+                }
+            }
+        }
+
         viewModel.viewModelScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.soundCategories.collect {
@@ -100,20 +111,26 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
         soundsListAdapter = SoundsListAdapter(
             onPlaybackClicked = { soundName, position ->
                 if (position == currentPlayingPosition) {
-                    if (SoundPlayer.isPlaying()) {
-                        SoundPlayer.stop()
-                    } else {
-                        SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
-                    }
+                    viewModel.stopSound()
                 } else {
-                    if (SoundPlayer.isPlaying()) {
-                        SoundPlayer.stop()
-                    }
-
-                    currentPlayingPosition = position
-                    SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
-                    soundsListAdapter.notifyDataSetChanged()
+                    viewModel.playPreviewSound(soundName)
                 }
+                currentPlayingPosition = position
+                soundsListAdapter.notifyDataSetChanged()
+//                if (position == currentPlayingPosition) {
+//                    if (SoundPlayer.isPlaying()) {
+//                        SoundPlayer.stop()
+//                    } else {
+//                        SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
+//                    }
+//                } else {
+//                    if (SoundPlayer.isPlaying()) {
+//                        SoundPlayer.stop()
+//                    }
+//                    currentPlayingPosition = position
+//                    SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
+//                    soundsListAdapter.notifyDataSetChanged()
+//                }
             }
         )
         val dividerItemDecoration = InsetDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)

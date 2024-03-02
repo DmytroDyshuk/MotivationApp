@@ -18,7 +18,6 @@ import com.motivation.affirmations.ui.core.adapters.favourite_sounds.FavouriteSo
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.core.adapters.favourite_sounds.FavouriteSoundItemClickListener
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
-import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.R
 import com.motivation.app.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,16 +50,7 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>(), FavouriteSoundI
     override fun onStop() {
         super.onStop()
         isTuneExpanded = !isTuneExpanded
-        if (SoundPlayer.isPlaying()) {
-            SoundPlayer.stop()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        SoundPlayer.setOnCompletionListener {
-            favouriteSoundsAdapter.updateUiOnSoundCompletion()
-        }
+        viewModel.stopSound()
     }
 
     override fun setListeners() {
@@ -81,6 +71,23 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>(), FavouriteSoundI
                 }
             }
         }
+
+        viewModel.viewModelScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.soundProgress.collect {
+                    if (favouriteSoundsAdapter.currentList.isNotEmpty()) {
+                        favouriteSoundsAdapter.updateSoundProgress(currentPlayingPosition, it)
+                        favouriteSoundsAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+
+        viewModel.onSoundCompleted.observe(viewLifecycleOwner) {
+            if (it == true) {
+                favouriteSoundsAdapter.updateUiOnSoundCompletion()
+            }
+        }
     }
 
     private fun initSoundsListAdapter() {
@@ -91,10 +98,11 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>(), FavouriteSoundI
             right = 16,
             bottom = 0,
             addSpaceAboveFirstItem = true,
-            addSpaceBelowLastItem = true
+            addSpaceBelowLastItem = false
         )
         binding.apply {
-            rvFavouriteSounds.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            rvFavouriteSounds.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             rvFavouriteSounds.adapter = favouriteSoundsAdapter
             rvFavouriteSounds.addItemDecoration(spaceDecoration)
         }
@@ -135,21 +143,11 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>(), FavouriteSoundI
     }
 
     override fun onSoundClicked(sound: Sound, position: Int) {
-        if (position == currentPlayingPosition) {
-            if (SoundPlayer.isPlaying()) {
-                SoundPlayer.stop()
-            } else {
-                SoundPlayer.play(sound.soundName, SoundPlayer.SoundPlayType.FULL)
-            }
-        } else {
-            if (SoundPlayer.isPlaying()) {
-                SoundPlayer.stop()
-            }
-
-            currentPlayingPosition = position
-            SoundPlayer.play(sound.soundName, SoundPlayer.SoundPlayType.FULL)
+        viewModel.playSound(sound.soundName)
+        if (position != currentPlayingPosition) {
             favouriteSoundsAdapter.notifyDataSetChanged()
         }
+        currentPlayingPosition = position
     }
 
     override fun onAddSoundClicked() {

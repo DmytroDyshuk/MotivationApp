@@ -14,7 +14,8 @@ data class Sound(
     val id: Int,
     val locked: Boolean,
     val objectId: String,
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+    var soundProgress: Int = 0
 )
 
 fun Sound.asEntity(): SoundEntity {

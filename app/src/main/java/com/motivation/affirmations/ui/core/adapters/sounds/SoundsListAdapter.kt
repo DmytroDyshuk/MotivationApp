@@ -92,13 +92,6 @@ class SoundsListAdapter(
         animationDrawable.start()
         currentPlayingImageView = imageView
         currentAnimationDrawable = animationDrawable
-
-        SoundPlayer.setOnCompletionListener {
-            animationDrawable.stop()
-            AppCompatResources.getDrawable(context, R.drawable.vector_playback_first_icon)?.let {
-                imageView.setImageDrawable(it)
-            }
-        }
     }
 
     private fun stopPlaybackAnimation(imageView: ImageView) {
@@ -106,6 +99,11 @@ class SoundsListAdapter(
         AppCompatResources.getDrawable(imageView.context, R.drawable.vector_playback_first_icon)?.let {
             imageView.setImageDrawable(it)
         }
+    }
+
+    fun updateUiOnSoundCompletion() {
+        selectedItemPosition = -1
+        notifyDataSetChanged()
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<Sound>() {

@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.motivation.affirmations.domain.model.Sound
 import com.motivation.affirmations.util.helpers.images_loader.GlideImageLoader
-import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.R
 import com.motivation.app.databinding.ItemAddFavouriteSoundBinding
 import com.motivation.app.databinding.ListItemFavouriteSoundBinding
 
 class FavouriteSoundsListAdapter(
-    private val soundItemClickListener: FavouriteSoundItemClickListener
+    private val soundItemClickListener: FavouriteSoundItemClickListener,
 ) : ListAdapter<Sound, RecyclerView.ViewHolder>(diffCallback) {
 
     private val glideImageLoader = GlideImageLoader()
@@ -63,6 +62,7 @@ class FavouriteSoundsListAdapter(
             binding.apply {
                 tvSoundName.text = sound.titleEn
                 glideImageLoader.loadImage(sound.thumbnailName, ivBackgroundImage)
+                pbSoundPlayProgress.progress = sound.soundProgress
 
                 if (position == selectedItemPosition) {
                     setPauseIconAndShowProgress(ivPlayPauseIcon, pbSoundPlayProgress)
@@ -70,7 +70,8 @@ class FavouriteSoundsListAdapter(
                     setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                 }
 
-                ivPlayPauseIcon.setOnClickListener {
+                clFavouriteSound.setOnClickListener {
+                    soundItemClickListener.onSoundClicked(sound, position)
                     if (position == selectedItemPosition) {
                         setPlayIconAndHideProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                     } else {
@@ -80,7 +81,6 @@ class FavouriteSoundsListAdapter(
                         selectedItemPosition = position
                         setPauseIconAndShowProgress(ivPlayPauseIcon, pbSoundPlayProgress)
                     }
-                    soundItemClickListener.onSoundClicked(sound, position)
                 }
             }
         }
@@ -91,7 +91,7 @@ class FavouriteSoundsListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind() {
             binding.apply {
-                mcvAddSoundIcon.setOnClickListener {
+                clAddSound.setOnClickListener {
                     soundItemClickListener.onAddSoundClicked()
                 }
             }
@@ -103,30 +103,27 @@ class FavouriteSoundsListAdapter(
         notifyDataSetChanged()
     }
 
+    fun updateSoundProgress(position: Int, progress: Int) {
+        if (position != -1) {
+            getItem(position)?.let {
+                it.soundProgress = progress
+            }
+        }
+    }
+
     private fun setPlayIconAndHideProgress(imageView: ImageView, progressBar: ProgressBar) {
         imageView.setImageDrawable(
             AppCompatResources.getDrawable(imageView.context, R.drawable.vector_play_icon)
         )
-        hideProgress(progressBar)
-    }
-
-    private fun setPauseIconAndShowProgress(imageView:ImageView, progressBar: ProgressBar) {
-        imageView.setImageDrawable(
-            AppCompatResources.getDrawable(imageView.context, R.drawable.vector_pause_icon)
-        )
-        showProgress(progressBar)
-    }
-
-    private fun hideProgress(progressBar: ProgressBar) {
         progressBar.progress = 0
         progressBar.visibility = View.INVISIBLE
     }
 
-    private fun showProgress(progressBar: ProgressBar) {
+    private fun setPauseIconAndShowProgress(imageView: ImageView, progressBar: ProgressBar) {
+        imageView.setImageDrawable(
+            AppCompatResources.getDrawable(imageView.context, R.drawable.vector_pause_icon)
+        )
         progressBar.visibility = View.VISIBLE
-        SoundPlayer.setProgressListener {
-            progressBar.progress = it
-        }
     }
 
     companion object {

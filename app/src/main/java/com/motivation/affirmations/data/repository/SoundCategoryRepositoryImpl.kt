@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SoundCategoryRepositoryImpl@Inject constructor(
+class SoundCategoryRepositoryImpl @Inject constructor(
     private val soundCategoryApi: SoundCategoryApi,
     private val soundCategoryDao: SoundCategoryDao,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher

@@ -14,7 +14,8 @@
     <!-- endregion-->
 
     <!-- region ContentDescription -->
-    <string name="content_description_add_pause_icon">Add or pause icon</string>
+    <string name="content_description_play_pause_icon">Play or pause icon</string>
+    <string name="content_description_add_sound_icon">Add sound</string>
     <string name="content_description_background_image">Background image</string>
     <string name="content_description_sound_image">Sound image</string>
     <string name="content_description_sound_playback_image">Sound playback image</string>

@@ -7,6 +7,9 @@ import com.motivation.affirmations.domain.repository.SoundCategoryRepository
 import com.motivation.affirmations.domain.repository.SoundRepository
 import com.motivation.affirmations.ui.core.BaseViewModel
 import com.motivation.affirmations.ui.fragments.background_music.ui_state.BackgroundMusicUiState
+import com.motivation.affirmations.util.helpers.sounds_player.SoundCompletionListener
+import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayType
+import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,8 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BackgroundMusicViewModel @Inject constructor(
     private val soundCategoryRepository: SoundCategoryRepository,
-    private val soundRepository: SoundRepository
-) : BaseViewModel() {
+    private val soundRepository: SoundRepository,
+    private val soundPlayer: SoundPlayer
+) : BaseViewModel(), SoundCompletionListener {
 
     private val _uiState = MutableStateFlow(BackgroundMusicUiState())
     val uiState: StateFlow<BackgroundMusicUiState> = _uiState.asStateFlow()
@@ -88,6 +92,24 @@ class BackgroundMusicViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun playPreviewSound(soundName: String) {
+        viewModelScope.launch {
+            soundPlayer.play(soundName, SoundPlayType.PREVIEW, this@BackgroundMusicViewModel)
+        }
+    }
+
+    fun stopSound() {
+        soundPlayer.stop()
+    }
+
+    override fun onSoundComplete() {
+        _uiState.update {
+            it.copy(
+                soundCompleted = true
+            )
         }
     }
 

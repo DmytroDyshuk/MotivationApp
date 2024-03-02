@@ -22,6 +22,14 @@
     <style name="Widget.Motivation.ProgressBar" parent="Widget.AppCompat.ProgressBar">
 
     </style>
+
+    <style name="Widget.Motivation.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorSize">55dp</item>
+        <item name="trackThickness">2dp</item>
+        <item name="indicatorColor">@color/jungle_green</item>
+        <item name="trackColor">#CCC</item>
+        <item name="trackCornerRadius">8dp</item>
+    </style>
     <!-- endregion -->
 
     <!-- region Button -->
@@ -126,7 +134,9 @@
     <!-- endregion -->
 
     <!--  region ShapeAppearance  -->
-
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
     <!-- endregion -->
 
 </resources>
