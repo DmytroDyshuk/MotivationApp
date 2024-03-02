@@ -17,11 +17,24 @@ data class SoundCategoryEntity constructor(
 
 fun SoundCategoryEntity.asDomainModel(): SoundCategory {
     return SoundCategory(
-        created = created,
-        classType = classType,
-        titleEn = titleEn,
-        id = id,
-        objectId = objectId,
-        ownerId = ownerId
+        created = this@asDomainModel.created,
+        classType = this@asDomainModel.classType,
+        titleEn = this@asDomainModel.titleEn,
+        id = this@asDomainModel.id,
+        objectId = this@asDomainModel.objectId,
+        ownerId = this@asDomainModel.ownerId
     )
+}
+
+fun List<SoundCategoryEntity>.asListDomainModel(): List<SoundCategory> {
+    return map {
+        SoundCategory(
+            created = it.created,
+            classType = it.classType,
+            titleEn = it.titleEn,
+            id = it.id,
+            objectId = it.objectId,
+            ownerId = it.ownerId
+        )
+    }
 }

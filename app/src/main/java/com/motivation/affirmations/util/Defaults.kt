@@ -9,4 +9,6 @@ object Defaults {
     const val SERVER_URL = "https://api.backendless.com"
 
     const val SOUND_IMAGES_FOLDER_URL = "${SERVER_URL}/${APPLICATION_ID}/${API_KEY}/files/sounds_images/"
+    const val SOUND_FILES_FOLDER_URL = "${SERVER_URL}/${APPLICATION_ID}/${API_KEY}/files/sounds/"
+    const val SOUND_PREVIEW_FOLDER_URL = "${SERVER_URL}/${APPLICATION_ID}/${API_KEY}/files/sounds_preview/"
 }

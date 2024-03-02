@@ -64,14 +64,14 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     namespace = "com.motivation.app"
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_1_8.toString()
+            jvmTarget = JavaVersion.VERSION_17.toString()
         }
     }
 }
@@ -113,13 +113,13 @@ dependencies {
 
     implementation(libs.timber)
 
-    //Glide
+    // Glide
     implementation(libs.glide)
 
-    //Moshi
+    // Moshi
     implementation(libs.moshi)
 
-    //Retrofit with Moshi Converter
+    // Retrofit with Moshi Converter
     implementation(libs.retrofit)
     implementation(libs.okhttp3)
 
@@ -129,7 +129,7 @@ dependencies {
     implementation(libs.backendless)
 
     implementation(libs.socket.io) {
-        //      excluding org.json which is provided by Android
+        // excluding org.json which is provided by Android
         exclude("org.json", "json")
     }
 

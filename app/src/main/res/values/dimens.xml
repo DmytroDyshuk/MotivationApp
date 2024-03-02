@@ -39,6 +39,9 @@
     <dimen name="button_corner_radius">12dp</dimen>
     <dimen name="default_home_button_width">58dp</dimen>
     <dimen name="default_home_button_height">64dp</dimen>
+
+    <dimen name="button_save_wight">311dp</dimen>
+    <dimen name="button_save_height">51dp</dimen>
     <!-- endregion -->
 
     <!-- region BottomNavigationView -->

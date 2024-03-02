@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
  * Created by Andriy Deputat email(andriy.deputat@gmail.com) on 16.03.2022.
  */
 abstract class ResultUseCase<out Type : Any,
-    in Params : UseCase.Params> : UseCase<Type, Params>() {
+        in Params : UseCase.Params> : UseCase<Type, Params>() {
 
     abstract suspend fun run(params: Params): Result<Type>
 

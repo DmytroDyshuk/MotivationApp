@@ -6,27 +6,35 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.motivation.affirmations.ui.core.adapters.SoundsListAdapter
+import com.motivation.affirmations.domain.model.Sound
+import com.motivation.affirmations.ui.core.adapters.favourite_sounds.FavouriteSoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
+import com.motivation.affirmations.ui.core.adapters.favourite_sounds.FavouriteSoundItemClickListener
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
 import com.motivation.app.R
 import com.motivation.app.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 /**
  * Created by Andriy Deputat email(andriy.deputat@gmail.com) on 19.02.2024.
  */
 @AndroidEntryPoint
-class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
+class HomeFragment : ViewBindingFragment<FragmentHomeBinding>(), FavouriteSoundItemClickListener {
 
     private val viewModel: HomeViewModel by viewModels()
 
+    private lateinit var favouriteSoundsAdapter: FavouriteSoundsListAdapter
+
     private var isTuneExpanded = false
+    private var currentPlayingPosition = -1
 
     override fun inflateBinding(
         inflater: LayoutInflater,
@@ -35,12 +43,14 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.updateSounds()
         initSoundsListAdapter()
     }
 
     override fun onStop() {
         super.onStop()
         isTuneExpanded = !isTuneExpanded
+        viewModel.resetPlayer()
     }
 
     override fun setListeners() {
@@ -52,27 +62,50 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
         }
     }
 
-    private fun initSoundsListAdapter() {
-        val adapter = SoundsListAdapter(
-            onSoundClicked = {
-                Toast.makeText(context, "onSoundClicked", Toast.LENGTH_SHORT).show()
-            },
-            onAddSoundClicked = {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBackgroundMusicFragment())
+    override fun addObservers() {
+        super.addObservers()
+        viewModel.viewModelScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    favouriteSoundsAdapter.submitList(it.favouritesSoundsList)
+                }
             }
-        )
-        binding.rvFavouriteSounds.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFavouriteSounds.adapter = adapter
+        }
+
+        viewModel.viewModelScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.soundProgress.collect {
+                    if (favouriteSoundsAdapter.currentList.isNotEmpty()) {
+                        favouriteSoundsAdapter.updateSoundProgress(currentPlayingPosition, it)
+                        favouriteSoundsAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+
+        viewModel.onSoundCompleted.observe(viewLifecycleOwner) {
+            if (it == true) {
+                favouriteSoundsAdapter.updateUiOnSoundCompletion()
+            }
+        }
+    }
+
+    private fun initSoundsListAdapter() {
+        favouriteSoundsAdapter = FavouriteSoundsListAdapter(this)
         val spaceDecoration = SpaceItemDecoration(
             top = 0,
-            left = 74,
-            right = 74,
+            left = 16,
+            right = 16,
             bottom = 0,
             addSpaceAboveFirstItem = true,
-            addSpaceBelowLastItem = true
+            addSpaceBelowLastItem = false
         )
-        binding.rvFavouriteSounds.addItemDecoration(spaceDecoration)
-        //TODO: adapter submitList
+        binding.apply {
+            rvFavouriteSounds.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            rvFavouriteSounds.adapter = favouriteSoundsAdapter
+            rvFavouriteSounds.addItemDecoration(spaceDecoration)
+        }
     }
 
     private fun toggleTuneIconAndAnimation(context: Context) {
@@ -102,8 +135,22 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>() {
             duration = 450
             start()
         }
+        if (!isTuneExpanded) {
+            binding.rvFavouriteSounds.visibility = View.VISIBLE
+        } else {
+            binding.rvFavouriteSounds.visibility = View.GONE
+        }
+    }
 
-        binding.rvFavouriteSounds.isClickable = isTuneExpanded
-        binding.rvFavouriteSounds.isFocusable = isTuneExpanded
+    override fun onSoundClicked(sound: Sound, position: Int) {
+        viewModel.playSound(sound.soundName)
+        if (position != currentPlayingPosition) {
+            favouriteSoundsAdapter.notifyDataSetChanged()
+        }
+        currentPlayingPosition = position
+    }
+
+    override fun onAddSoundClicked() {
+        findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToBackgroundMusicFragment())
     }
 }

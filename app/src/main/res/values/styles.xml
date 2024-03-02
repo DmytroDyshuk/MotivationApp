@@ -2,9 +2,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- region Toolbar -->
     <style name="Widget.Motivation.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
-        <item name="android:background">@android:color/transparent</item>
+        <item name="android:background">@android:color/white</item>
         <item name="titleTextAppearance">?attr/textAppearanceHeadline6</item>
-        <item name="android:paddingStart">@dimen/offset_huge</item>
+        <item name="android:paddingStart">@dimen/offset_average</item>
     </style>
     <!-- endregion -->
 
@@ -20,9 +20,15 @@
 
     <!-- region ProgressBar -->
     <style name="Widget.Motivation.ProgressBar" parent="Widget.AppCompat.ProgressBar">
-        <item name="android:minHeight">@dimen/progress_bar_size</item>
-        <item name="android:minWidth">@dimen/progress_bar_size</item>
-        <item name="android:elevation">16dp</item>
+
+    </style>
+
+    <style name="Widget.Motivation.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorSize">55dp</item>
+        <item name="trackThickness">2dp</item>
+        <item name="indicatorColor">@color/jungle_green</item>
+        <item name="trackColor">#CCC</item>
+        <item name="trackCornerRadius">8dp</item>
     </style>
     <!-- endregion -->
 
@@ -37,6 +43,17 @@
     <style name="Widget.Motivation.HomeButton" parent="Widget.Motivation.Button">
         <item name="android:layout_width">@dimen/default_home_button_width</item>
         <item name="android:layout_height">@dimen/default_home_button_height</item>
+    </style>
+
+    <style name="Widget.Motivation.SaveButton" parent="Widget.Motivation.Button">
+        <item name="android:layout_width">@dimen/button_save_wight</item>
+        <item name="android:layout_height">@dimen/button_save_height</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="backgroundColor">?attr/colorOnPrimary</item>
+        <item name="backgroundTint">?attr/colorOnPrimary</item>
+        <item name="android:fontFamily">@font/dm_sans_medium</item>
+        <item name="android:text">@string/save</item>
+        <item name="android:layout_marginBottom">14dp</item>
     </style>
 
     <!-- endregion -->
@@ -76,9 +93,9 @@
     <!-- endregion -->
 
     <!-- region CheckBox -->
-    <style name="Widget.Motivation.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+    <style name="Widget.Motivation.CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-        <item name="buttonTint">@color/check_box_btn_tint</item>
+        <item name="android:button">@drawable/checkbox_selector</item>
     </style>
     <!-- endregion -->
 
@@ -117,7 +134,9 @@
     <!-- endregion -->
 
     <!--  region ShapeAppearance  -->
-
+    <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
     <!-- endregion -->
 
 </resources>
