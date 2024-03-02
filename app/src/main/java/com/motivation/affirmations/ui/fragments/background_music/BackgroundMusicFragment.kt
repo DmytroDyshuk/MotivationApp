@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,11 +14,8 @@ import com.motivation.affirmations.ui.core.adapters.sound_categories.SoundCatego
 import com.motivation.affirmations.ui.core.adapters.sounds.SoundsListAdapter
 import com.motivation.affirmations.ui.core.adapters.SpaceItemDecoration
 import com.motivation.affirmations.ui.fragments.ViewBindingFragment
-import com.motivation.affirmations.util.helpers.sounds_player.SoundPlayer
 import com.motivation.app.databinding.FragmentBackgroundMusicBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 /**
@@ -49,7 +45,7 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
 
     override fun onStop() {
         super.onStop()
-        viewModel.stopSound()
+        viewModel.resetPlayer()
     }
 
     override fun addObservers() {
@@ -110,27 +106,11 @@ class BackgroundMusicFragment : ViewBindingFragment<FragmentBackgroundMusicBindi
     private fun initSoundsListAdapter() {
         soundsListAdapter = SoundsListAdapter(
             onPlaybackClicked = { soundName, position ->
-                if (position == currentPlayingPosition) {
-                    viewModel.stopSound()
-                } else {
-                    viewModel.playPreviewSound(soundName)
+                viewModel.playPreviewSound(soundName)
+                if (position != currentPlayingPosition) {
+                    soundsListAdapter.notifyDataSetChanged()
                 }
                 currentPlayingPosition = position
-                soundsListAdapter.notifyDataSetChanged()
-//                if (position == currentPlayingPosition) {
-//                    if (SoundPlayer.isPlaying()) {
-//                        SoundPlayer.stop()
-//                    } else {
-//                        SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
-//                    }
-//                } else {
-//                    if (SoundPlayer.isPlaying()) {
-//                        SoundPlayer.stop()
-//                    }
-//                    currentPlayingPosition = position
-//                    SoundPlayer.play(soundName, SoundPlayer.SoundPlayType.PREVIEW)
-//                    soundsListAdapter.notifyDataSetChanged()
-//                }
             }
         )
         val dividerItemDecoration = InsetDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL)

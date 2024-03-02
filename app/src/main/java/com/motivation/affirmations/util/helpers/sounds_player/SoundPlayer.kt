@@ -12,15 +12,9 @@ import javax.inject.Singleton
 
 @Singleton
 class SoundPlayer @Inject constructor(
-    private val externalScope: CoroutineScope
+    private val externalScope: CoroutineScope,
+    private val mediaPlayer: MediaPlayer
 ) {
-    private var mediaPlayer = MediaPlayer().apply {
-        setOnPreparedListener {
-            start()
-            totalSoundDuration = it.duration
-            startProgressListener()
-        }
-    }
 
     private var totalSoundDuration: Int = 0
     private var currentPlayingSoundName = ""
@@ -42,17 +36,17 @@ class SoundPlayer @Inject constructor(
                 setDataSource(url)
                 setOnCompletionListener {
                     soundCompletionListener.onSoundComplete()
-                    releasePlayer()
+                    resetPlayer()
+                }
+                setOnPreparedListener {
+                    start()
+                    totalSoundDuration = it.duration
+                    startProgressListener()
                 }
                 prepareAsync()
             }
             currentPlayingSoundName = soundName
         }
-    }
-
-    fun stop() {
-        mediaPlayer.stop()
-        releasePlayer()
     }
 
     private fun startProgressListener() {
@@ -71,8 +65,8 @@ class SoundPlayer @Inject constructor(
         }
     }
 
-    private fun releasePlayer() {
-        mediaPlayer.release()
+    fun resetPlayer() {
+        mediaPlayer.reset()
         progressJob?.cancel()
         progressJob = null
     }

@@ -101,8 +101,8 @@ class BackgroundMusicViewModel @Inject constructor(
         }
     }
 
-    fun stopSound() {
-        soundPlayer.stop()
+    fun resetPlayer() {
+        soundPlayer.resetPlayer()
     }
 
     override fun onSoundComplete() {

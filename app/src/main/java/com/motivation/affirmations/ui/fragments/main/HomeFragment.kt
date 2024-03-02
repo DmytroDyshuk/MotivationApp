@@ -50,7 +50,7 @@ class HomeFragment : ViewBindingFragment<FragmentHomeBinding>(), FavouriteSoundI
     override fun onStop() {
         super.onStop()
         isTuneExpanded = !isTuneExpanded
-        viewModel.stopSound()
+        viewModel.resetPlayer()
     }
 
     override fun setListeners() {

@@ -79,7 +79,7 @@ class FavouriteSoundsListAdapter(
                             notifyItemChanged(selectedItemPosition)
                         }
                         selectedItemPosition = position
-                        setPauseIconAndShowProgress(ivPlayPauseIcon, pbSoundPlayProgress)
+                        notifyDataSetChanged()
                     }
                 }
             }

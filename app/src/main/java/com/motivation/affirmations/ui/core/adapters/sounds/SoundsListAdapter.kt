@@ -44,15 +44,14 @@ class SoundsListAdapter(
                 }
 
                 ivPlaybackSound.setOnClickListener {
+                    onPlaybackClicked.invoke(sound.previewName, position)
                     if (position == selectedItemPosition) {
                         stopPlaybackAnimation(ivPlaybackSound)
-                        onPlaybackClicked.invoke(sound.previewName, position)
                     } else {
                         if (selectedItemPosition != -1) {
                             notifyItemChanged(selectedItemPosition)
                         }
                         selectedItemPosition = position
-                        onPlaybackClicked.invoke(sound.previewName, position)
                         notifyDataSetChanged()
                     }
                 }
